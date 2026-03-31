@@ -118,7 +118,7 @@
                 </div>
                 <span class="meta-info">ESTABLISHED 2005</span>
                 <h2>Raisa</h2>
-                <p>Barrister-at-Law, LSE London. ন্যায়ের পথে আপসহীন এক ব্যক্তিত্ব।</p>
+                <p>Barrister-at-Law, LSE London. ন্যায়ের পথে আপসহীন এক ব্যক্তিত্ব।</p>
                 <div style="color: var(--matte-silver); font-size: 0.9rem;">📍 Manchester, United Kingdom</div>
             </div>
 
@@ -130,7 +130,7 @@
                 <span class="meta-info">CORE ARCHITECT</span>
                 <h2>Shakil</h2>
                 <p>AI Architect & Software Engineer. বিশ্বের ১৯৫টি দেশে ডিজিটাল সলিউশন সরবরাহকারী।</p>
-                <div style="color: var(--matte-silver); font-size: 0.9rem;">📍 Dhaka, Bangladesh</div>
+                <div style="color: var(--matte-silver); font-size: 0.9rem;">📍 Mymensingh, Bangladesh</div>
             </div>
         </section>
 
@@ -146,20 +146,17 @@
     </div>
 
     <script>
-        // ৩ সেকেন্ডের এনিমেশন কন্ট্রোল
         window.onload = () => {
             setTimeout(() => {
                 document.getElementById('shutter-left').style.transform = 'translateX(-100%)';
                 document.getElementById('shutter-right').style.transform = 'translateX(100%)';
                 document.body.classList.add('app-loaded');
-            }, 3000); // ৩ সেকেন্ড পর ইন্ট্রো শেষ হবে
+            }, 3000);
 
-            // লোড হলে সেভ করা ছবি দেখানো
             if(localStorage.getItem('r_img')) document.getElementById('p_view1').src = localStorage.getItem('r_img');
             if(localStorage.getItem('s_img')) document.getElementById('p_view2').src = localStorage.getItem('s_img');
         };
 
-        // প্রোফাইল ফটো আপলোড
         function upload(input, viewId, key) {
             const file = input.files[0];
             if(file) {
