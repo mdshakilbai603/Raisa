@@ -10,178 +10,156 @@
     
     <style>
         :root {
-            --carbon: #050505;
-            --pure-white: #ffffff;
+            --bg: #030712;
+            --card: #111827;
             --neon-pink: #ff007f;
-            --neon-green: #00ff41;
-            --border-gray: #1a1a1a;
-            --glass: rgba(255, 255, 255, 0.03);
+            --neon-green: #10b981;
+            --white: #f8fafc;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Hind Siliguri', sans-serif; }
+        body { background: var(--bg); color: var(--white); overflow-x: hidden; }
 
-        body { background-color: var(--carbon); color: var(--pure-white); overflow-x: hidden; }
-
-        /* --- 1 SECOND CINEMATIC SHUTTER ANIMATION --- */
-        #loader {
-            position: fixed; inset: 0; background: #000; z-index: 10000;
+        /* --- ৩ সেকেন্ডের প্রিমিয়াম এনিমেশন --- */
+        #intro {
+            position: fixed; inset: 0; background: #000; z-index: 9999;
             display: flex; justify-content: center; align-items: center;
-            animation: shutterOut 1s cubic-bezier(1, 0, 0, 1) forwards;
+            animation: slideUp 1s cubic-bezier(1,0,0,1) 3s forwards; /* ৩ সেকেন্ড পর সরবে */
         }
-        .loader-text {
-            font-family: 'Inter', sans-serif; font-size: 3rem; font-weight: 900;
-            background: linear-gradient(to right, var(--neon-pink), var(--neon-green));
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            letter-spacing: 10px; transform: scale(0.8); opacity: 0;
-            animation: textPop 0.6s ease forwards;
+        .intro-circle {
+            width: 10px; height: 10px; background: var(--neon-pink); border-radius: 50%;
+            animation: pulse 3s ease-in-out infinite;
         }
-        @keyframes textPop { to { transform: scale(1); opacity: 1; } }
-        @keyframes shutterOut { 0% { transform: translateY(0); } 80% { transform: translateY(0); opacity: 1; } 100% { transform: translateY(-100%); opacity: 0; visibility: hidden; } }
+        .intro-text {
+            position: absolute; font-family: 'Inter'; font-size: 2.5rem; letter-spacing: 15px;
+            opacity: 0; animation: textFade 3s ease-in-out forwards; color: #fff;
+        }
+        @keyframes pulse { 0% { transform: scale(1); box-shadow: 0 0 0 var(--neon-pink); } 50% { transform: scale(50); box-shadow: 0 0 100px var(--neon-pink); } 100% { transform: scale(1); } }
+        @keyframes textFade { 20% { opacity: 0; } 50% { opacity: 1; letter-spacing: 20px; } 100% { opacity: 0; } }
+        @keyframes slideUp { to { transform: translateY(-100%); visibility: hidden; } }
 
-        /* --- BIG SCALE UI --- */
-        #app { opacity: 0; animation: fadeIn 0.5s ease 1s forwards; }
+        /* --- মেইন ডিজাইন --- */
+        #app { opacity: 0; animation: fadeIn 1s ease 3.2s forwards; }
         @keyframes fadeIn { to { opacity: 1; } }
 
-        /* Navigation */
-        nav {
-            height: 100px; display: flex; justify-content: space-between; align-items: center;
-            padding: 0 6%; border-bottom: 1px solid var(--border-gray);
-            backdrop-filter: blur(20px); position: sticky; top: 0; z-index: 99;
+        header { padding: 40px 6%; border-bottom: 1px solid #1f2937; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-family: 'Inter'; font-size: 1.5rem; color: var(--neon-green); letter-spacing: 5px; }
+
+        .hero { padding: 80px 6%; text-align: left; }
+        .hero h1 { font-size: 6.5rem; line-height: 0.8; font-weight: 900; margin-bottom: 20px; }
+        .hero span { color: var(--neon-pink); }
+
+        /* প্রোফাইল কার্ড - বড় এবং সিনেমাটিক */
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(450px, 1fr)); gap: 30px; padding: 0 6%; }
+        .glass-card {
+            background: var(--card); border: 1px solid #374151; border-radius: 40px; padding: 60px;
+            position: relative; transition: 0.5s; overflow: hidden;
         }
-        .logo { font-family: 'Inter', sans-serif; font-size: 1.5rem; letter-spacing: 5px; color: var(--neon-green); }
-
-        /* Hero / Profile */
-        .hero-section { padding: 80px 6%; text-align: left; }
-        .hero-title { font-size: 6rem; line-height: 0.9; font-weight: 900; margin-bottom: 30px; letter-spacing: -2px; }
-        .pink-glow { color: var(--neon-pink); text-shadow: 0 0 30px rgba(255, 0, 127, 0.3); }
-
-        /* Profile ID System */
-        .id-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(450px, 1fr)); gap: 30px; padding: 0 6%; }
+        .glass-card:hover { border-color: var(--neon-green); background: #0f172a; transform: translateY(-10px); }
+        .glass-card h2 { font-size: 3.5rem; margin-bottom: 20px; }
         
-        .id-card {
-            background: var(--glass); border: 1px solid var(--border-gray); border-radius: 40px;
-            padding: 60px; position: relative; overflow: hidden; transition: 0.5s cubic-bezier(0.2, 1, 0.3, 1);
-        }
-        .id-card:hover { border-color: var(--neon-green); background: rgba(0, 255, 65, 0.02); transform: translateY(-10px); }
-        
-        .id-card h2 { font-size: 3.5rem; margin-bottom: 20px; font-weight: 800; }
-        .tag { display: inline-block; padding: 8px 20px; background: var(--pure-white); color: #000; font-weight: 900; text-transform: uppercase; margin-bottom: 30px; font-size: 0.8rem; }
+        .tag { display: inline-block; padding: 10px 25px; background: var(--white); color: #000; font-weight: 900; border-radius: 50px; margin-bottom: 30px; }
 
-        .meta-list { list-style: none; }
-        .meta-list li { font-size: 1.2rem; margin-bottom: 15px; color: #888; display: flex; align-items: center; }
-        .meta-list i { width: 35px; color: var(--neon-pink); font-size: 1.3rem; }
+        .info-list { list-style: none; }
+        .info-list li { font-size: 1.2rem; margin-bottom: 15px; color: #9ca3af; display: flex; align-items: center; }
+        .info-list i { width: 40px; color: var(--neon-pink); }
 
-        /* Cinematic Gallery */
-        .gallery-section { padding: 100px 6%; }
-        .upload-area {
-            width: 100%; padding: 100px; border: 2px dashed #333; border-radius: 40px;
+        /* গ্যালারি এবং সেভ সিস্টেম */
+        .gallery { padding: 100px 6%; }
+        .upload-trigger {
+            width: 100%; padding: 80px; border: 2px dashed #374151; border-radius: 40px;
             text-align: center; cursor: pointer; transition: 0.3s;
         }
-        .upload-area:hover { border-color: var(--neon-green); background: rgba(0,255,65,0.05); }
+        .upload-trigger:hover { border-color: var(--neon-pink); background: rgba(255, 0, 127, 0.05); }
 
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 20px; margin-top: 50px; }
-        .photo-item { 
-            height: 500px; background: #0a0a0a; border-radius: 30px; overflow: hidden; 
-            position: relative; border: 1px solid var(--border-gray);
+        .photo-wall { display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 20px; margin-top: 50px; }
+        .photo-card { 
+            height: 500px; border-radius: 30px; overflow: hidden; position: relative; border: 1px solid #1f2937;
         }
-        .photo-item img { width: 100%; height: 100%; object-fit: cover; transition: 0.8s; }
-        .photo-item:hover img { transform: scale(1.1); filter: brightness(0.5); }
+        .photo-card img { width: 100%; height: 100%; object-fit: cover; transition: 0.5s; }
+        .photo-card:hover img { transform: scale(1.1); filter: brightness(0.4); }
 
-        /* Real Save Button (For Device Gallery) */
         .save-btn {
-            position: absolute; bottom: 30px; left: 30px; right: 30px;
-            background: var(--pure-white); color: #000; padding: 15px;
-            text-align: center; border-radius: 15px; font-weight: 900;
-            opacity: 0; transform: translateY(20px); transition: 0.3s;
-            cursor: pointer; text-decoration: none; display: block;
+            position: absolute; bottom: 30px; left: 30px; right: 30px; background: #fff; color: #000;
+            padding: 15px; text-align: center; border-radius: 15px; font-weight: 900; opacity: 0;
+            transform: translateY(20px); transition: 0.3s; cursor: pointer; display: block; text-decoration: none;
         }
-        .photo-item:hover .save-btn { opacity: 1; transform: translateY(0); }
+        .photo-card:hover .save-btn { opacity: 1; transform: translateY(0); }
 
-        .del-btn {
-            position: absolute; top: 20px; right: 20px; background: var(--neon-pink);
-            color: white; border: none; width: 45px; height: 45px; border-radius: 15px; cursor: pointer;
-        }
+        .del { position: absolute; top: 20px; right: 20px; background: var(--neon-pink); color: #fff; border: none; width: 40px; height: 40px; border-radius: 10px; cursor: pointer; }
 
-        footer { padding: 100px 6%; border-top: 1px solid var(--border-gray); text-align: center; color: #444; font-weight: 700; letter-spacing: 5px; }
+        footer { text-align: center; padding: 100px; opacity: 0.3; letter-spacing: 5px; }
 
-        @media (max-width: 768px) {
-            .hero-title { font-size: 3rem; }
-            .id-container { grid-template-columns: 1fr; }
-            .id-card { padding: 30px; }
-        }
+        @media (max-width: 768px) { .hero h1 { font-size: 3.5rem; } .grid { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
 
-    <div id="loader">
-        <div class="loader-text">RAISA.OS</div>
+    <div id="intro">
+        <div class="intro-circle"></div>
+        <div class="intro-text">RAISA ARCHIVE</div>
     </div>
 
     <div id="app">
-        <nav>
-            <div class="logo">ELITE.CORE</div>
-            <div style="font-weight: 700; color: var(--neon-pink);">SYSTEM v5.0</div>
-        </nav>
+        <header>
+            <div class="logo">PRIVATE_CORE</div>
+            <div style="font-weight: 700; color: var(--neon-pink);">SYSTEM v7.0</div>
+        </header>
 
-        <section class="hero-section">
-            <h1 class="hero-title">BARRISTER <br><span class="pink-glow">RAISA</span> ARCHIVE.</h1>
-            <p style="font-size: 1.5rem; color: #666; max-width: 700px;">এটি একটি হাই-এন্ড সিকিউর পোর্টাল যা ব্যারিস্টার রাইসা এবং ডেভেলপার শাকিল এর ডেটাবেজ হিসেবে কাজ করে।</p>
+        <section class="hero">
+            <h1>BARRISTER <br><span>RAISA</span> ARCHIVE.</h1>
+            <p style="margin-top: 20px; color: #6b7280; font-size: 1.3rem;">কোনো থার্ড-পার্টি অ্যাপ নয়, এটি একটি সম্পূর্ণ সিকিউর ডিজিটাল ইকোসিস্টেম।</p>
         </section>
 
-        <section class="id-container">
-            <div class="id-card">
-                <span class="tag">Profile_01</span>
+        <section class="grid">
+            <div class="glass-card">
+                <span class="tag">IDENTITY_01</span>
                 <h2>Raisa</h2>
-                <ul class="meta-list">
+                <ul class="info-list">
                     <li><i class="fas fa-university"></i> LSE, London</li>
-                    <li><i class="fas fa-gavel"></i> Old Bailey Court, London</li>
+                    <li><i class="fas fa-gavel"></i> Old Bailey, UK</li>
                     <li><i class="fas fa-calendar"></i> March 19, 2005</li>
                     <li><i class="fas fa-location-dot"></i> Manchester, UK</li>
                 </ul>
             </div>
 
-            <div class="id-card">
-                <span class="tag" style="background: var(--neon-green);">Architect_01</span>
+            <div class="glass-card">
+                <span class="tag" style="background: var(--neon-green);">ARCHITECT_01</span>
                 <h2>Shakil</h2>
-                <ul class="meta-list">
-                    <li><i class="fas fa-terminal" style="color: var(--neon-green);"></i> Software & AI Architect</li>
-                    <li><i class="fas fa-rocket" style="color: var(--neon-green);"></i> Creator of Universal-Save</li>
-                    <li><i class="fas fa-globe" style="color: var(--neon-green);"></i> Serving 195 Countries</li>
-                    <li><i class="fas fa-flag" style="color: var(--neon-green);"></i> Bangladesh</li>
+                <ul class="info-list">
+                    <li><i class="fas fa-terminal"></i> Software & AI Architect</li>
+                    <li><i class="fas fa-rocket"></i> Creator of Universal-Save</li>
+                    <li><i class="fas fa-globe"></i> Global SaaS Specialist</li>
+                    <li><i class="fas fa-flag"></i> Bangladesh</li>
                 </ul>
             </div>
         </section>
 
-        <section class="gallery-section">
-            <div class="upload-area" onclick="document.getElementById('fileInput').click()">
-                <i class="fas fa-plus" style="font-size: 3rem; color: var(--neon-green); margin-bottom: 20px;"></i>
-                <h2>গ্যালারিতে নতুন ডাটা যুক্ত করুন</h2>
-                <p style="color: #666;">ট্যাপ করুন ফাইল সিলেক্ট করতে (স্বয়ংক্রিয় সেভ)</p>
-                <input type="file" id="fileInput" style="display: none;" accept="image/*">
+        <section class="gallery">
+            <div class="upload-trigger" onclick="document.getElementById('fileIn').click()">
+                <i class="fas fa-plus" style="font-size: 2.5rem; color: var(--neon-green); margin-bottom: 20px;"></i>
+                <h2>স্মৃতিগুলো যুক্ত করুন</h2>
+                <input type="file" id="fileIn" style="display: none;" accept="image/*">
             </div>
 
-            <div class="grid" id="mainWall">
-                </div>
+            <div class="photo-wall" id="wall"></div>
         </section>
 
-        <footer>
-            <p>DESIGNED BY SHAKIL DIGITAL ARCHITECT</p>
-        </footer>
+        <footer>DESIGNED BY SHAKIL DIGITAL ARCHITECT</footer>
     </div>
 
     <script>
-        const fileInput = document.getElementById('fileInput');
-        const mainWall = document.getElementById('mainWall');
+        const fileIn = document.getElementById('fileIn');
+        const wall = document.getElementById('wall');
 
-        // Real Saving to LocalStorage
-        fileInput.onchange = function() {
+        fileIn.onchange = function() {
             const file = this.files[0];
             if(file) {
                 const reader = new FileReader();
                 reader.onload = (e) => {
-                    let db = JSON.parse(localStorage.getItem('ultimate_db')) || [];
+                    let db = JSON.parse(localStorage.getItem('final_v7')) || [];
                     db.push({ id: Date.now(), src: e.target.result });
-                    localStorage.setItem('ultimate_db', JSON.stringify(db));
+                    localStorage.setItem('final_v7', JSON.stringify(db));
                     render();
                 };
                 reader.readAsDataURL(file);
@@ -189,27 +167,25 @@
         };
 
         function render() {
-            let db = JSON.parse(localStorage.getItem('ultimate_db')) || [];
-            mainWall.innerHTML = '';
-            db.reverse().forEach(photo => {
-                const item = document.createElement('div');
-                item.className = 'photo-item';
-                item.innerHTML = `
-                    <img src="${photo.src}">
-                    <a href="${photo.src}" download="memory_${photo.id}.png" class="save-btn">গ্যালারিতে সেভ করুন</a>
-                    <button class="del-btn" onclick="del(${photo.id})"><i class="fas fa-trash"></i></button>
+            let db = JSON.parse(localStorage.getItem('final_v7')) || [];
+            wall.innerHTML = '';
+            db.reverse().forEach(p => {
+                const div = document.createElement('div');
+                div.className = 'photo-card';
+                div.innerHTML = `
+                    <img src="${p.src}">
+                    <a href="${p.src}" download="memory_${p.id}.png" class="save-btn">ফোনে সেভ করুন</a>
+                    <button class="del" onclick="del(${p.id})"><i class="fas fa-trash"></i></button>
                 `;
-                mainWall.appendChild(item);
+                wall.appendChild(div);
             });
         }
 
         function del(id) {
-            if(confirm('মুছে ফেলতে চান?')) {
-                let db = JSON.parse(localStorage.getItem('ultimate_db')) || [];
-                db = db.filter(x => x.id !== id);
-                localStorage.setItem('ultimate_db', JSON.stringify(db));
-                render();
-            }
+            let db = JSON.parse(localStorage.getItem('final_v7')) || [];
+            db = db.filter(x => x.id !== id);
+            localStorage.setItem('final_v7', JSON.stringify(db));
+            render();
         }
 
         window.onload = render;
