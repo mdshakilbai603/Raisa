@@ -3,222 +3,176 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>রাইসা | আলটিমেট সোশ্যাল পোর্টাল</title>
-    
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;900&family=Hind+Siliguri:wght@400;700&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>ব্যারিস্টার রাইসা | অফিশিয়াল পোর্টাল</title>
     
     <style>
+        /* ফন্ট: Hind Siliguri (বেস৬৪ ফন্ট ব্যবহার করে কোনো থার্ড-পার্টি লিঙ্ক বাদ দেওয়া হয়েছে) */
+        @font-face {
+            font-family: 'Hind Siliguri';
+            src: url('data:font/woff2;base64,...(Base64_Encoded_Font_Data)...') format('woff2'); /* ডেভেলপার নোট: এখানে ডেভেলপারকে রিয়েল বেস৬৪ কোড বসাতে হবে */
+            font-weight: 400; font-style: normal;
+        }
+        @font-face {
+            font-family: 'Hind Siliguri';
+            src: url('data:font/woff2;base64,...(Base64_Encoded_Font_Data_Bold)...') format('woff2'); /* ডেভেলপার নোট: এখানে বোল্ড ভার্সনের বেস৬৪ কোড বসাতে হবে */
+            font-weight: 600; font-style: normal;
+        }
+
         :root {
-            --black: #050505;
-            --neon-purple: #bc13fe;
-            --neon-green: #00ff41;
+            --midnight: #0b1120;
+            --rose-gold: #e2b49a;
+            --soft-teal: #a8dadc;
+            --text-main: #f0f0f0;
             --glass: rgba(255, 255, 255, 0.05);
-            --text-white: #f0f0f0;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Hind Siliguri', sans-serif; }
 
-        body { background-color: var(--black); color: var(--text-white); overflow-x: hidden; }
+        body { 
+            background-color: var(--midnight); 
+            color: var(--text-main); 
+            overflow: hidden; /* লোডিং এর সময় স্ক্রল বন্ধ রাখা */
+            display: flex; justify-content: center; align-items: center;
+            height: 100vh;
+        }
 
-        /* --- INTRO: CYBER REVEAL --- */
-        #intro {
+        /* --- 1. SUPER FAST INTRO ANIMATION (1 SEC) --- */
+        #intro-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: #000; z-index: 10000; display: flex;
-            justify-content: center; align-items: center; transition: 1s ease;
-        }
-        .reveal-name {
-            font-family: 'Orbitron', sans-serif; font-size: 4rem;
-            color: #fff; text-shadow: 0 0 10px var(--neon-purple), 0 0 20px var(--neon-purple);
-            letter-spacing: 15px; animation: glow 2s infinite alternate;
-        }
-        @keyframes glow {
-            from { opacity: 0.5; text-shadow: 0 0 10px var(--neon-purple); }
-            to { opacity: 1; text-shadow: 0 0 30px var(--neon-purple), 0 0 50px var(--neon-green); }
+            justify-content: center; align-items: center; transition: 1s cubic-bezier(0.8, 0, 0.2, 1);
         }
 
-        /* --- MAIN UI --- */
-        #main-content { display: none; padding-bottom: 50px; }
-
-        header {
-            height: 300px; background: linear-gradient(rgba(0,0,0,0.5), var(--black)), url('https://source.unsplash.com/1600x900/?night,city');
-            background-size: cover; display: flex; align-items: flex-end; padding: 0 5% 40px;
+        .loader-ring {
+            width: 80px; height: 80px; border-radius: 50%;
+            border: 4px solid var(--glass);
+            border-top: 4px solid var(--rose-gold);
+            animation: spin 0.8s linear infinite;
         }
 
-        .profile-container { display: flex; align-items: center; gap: 20px; }
-        .profile-ring {
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        /* --- 2. MAIN LAYOUT --- */
+        #main-ui { 
+            display: none; opacity: 0; transition: 1s ease; 
+            width: 100%; max-width: 480px; height: 100vh;
+            background: radial-gradient(circle at center, #1a2530 0%, #0b1120 100%);
+            display: flex; flex-direction: column;
+        }
+
+        header { padding: 40px 20px 20px; text-align: center; position: relative; }
+
+        .profile-container {
             width: 120px; height: 120px; border-radius: 50%;
-            padding: 5px; background: linear-gradient(45deg, var(--neon-purple), var(--neon-green));
-            position: relative;
+            padding: 5px; background: linear-gradient(45deg, var(--rose-gold), var(--soft-teal));
+            margin: 0 auto 15px; cursor: pointer; position: relative;
         }
-        .profile-ring img { width: 100%; height: 100%; border-radius: 50%; border: 4px solid var(--black); }
+        .profile-container img { width: 100%; height: 100%; border-radius: 50%; border: 4px solid var(--midnight); }
 
-        /* --- SOCIAL CARDS --- */
-        .hub-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 25px; padding: 40px 5%; }
+        /* Save Icon overlay */
+        .save-overlay {
+            position: absolute; bottom: 5px; right: 5px;
+            background: var(--midnight); border-radius: 50%;
+            padding: 5px; color: var(--soft-teal); font-size: 0.8rem;
+            display: flex; align-items: center; justify-content: center;
+            border: 1px solid var(--soft-teal);
+        }
+
+        h1.title { font-size: 2.2rem; color: var(--rose-gold); margin-bottom: 5px; }
+
+        /* Details List (New Design) */
+        .details-grid { display: grid; grid-template-columns: 1fr; gap: 15px; padding: 30px 20px; margin-top: 20px; flex-grow: 1; }
         
-        .social-card {
-            background: var(--glass); border-radius: 25px; padding: 30px;
-            backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.1);
-            transition: 0.4s; position: relative; overflow: hidden;
+        .info-card {
+            background: var(--glass); border: 1px solid rgba(255,255,255,0.08);
+            backdrop-filter: blur(20px); border-radius: 20px; padding: 20px;
+            transition: 0.4s;
         }
-        .social-card:hover { transform: translateY(-10px); border-color: var(--neon-purple); box-shadow: 0 0 30px rgba(188, 19, 254, 0.2); }
+        .info-card:hover { transform: translateY(-5px); border-color: var(--soft-teal); }
 
-        .card-type { font-family: 'Orbitron', sans-serif; font-size: 0.7rem; letter-spacing: 2px; color: var(--neon-green); margin-bottom: 15px; }
-        .card-name { font-size: 2rem; margin-bottom: 10px; font-weight: 700; }
+        .info-row { display: flex; align-items: center; margin-bottom: 10px; color: #ccc; font-size: 0.95rem; }
         
-        .bio-text { font-size: 0.95rem; color: #bbb; line-height: 1.6; margin-bottom: 20px; }
-        
-        .stats { display: flex; gap: 20px; margin-bottom: 20px; }
-        .stat-item { text-align: center; }
-        .stat-val { display: block; font-weight: 700; color: var(--text-white); }
-        .stat-lab { font-size: 0.7rem; color: #777; text-transform: uppercase; }
+        /* ইনলাইন SVG আইকন (থার্ড-পার্টি লিঙ্ক বাদ দেওয়া হয়েছে) */
+        .svg-icon { width: 20px; height: 20px; fill: var(--rose-gold); margin-right: 15px; }
 
-        /* --- ROMANTIC NEON BUTTONS --- */
-        .btn-group { display: flex; gap: 10px; }
-        .action-btn {
-            flex: 1; padding: 12px; border-radius: 12px; border: none;
-            font-weight: 700; cursor: pointer; transition: 0.3s;
-            display: flex; align-items: center; justify-content: center; gap: 8px;
-        }
-        .btn-primary { background: var(--neon-purple); color: white; }
-        .btn-secondary { background: rgba(255,255,255,0.1); color: white; }
+        footer { text-align: center; padding: 30px; font-size: 0.8rem; color: #444; margin-top: auto; }
 
-        /* --- PHOTO GALLERY (INSTA STYLE) --- */
-        .gallery-title { padding: 0 5%; font-family: 'Dancing Script', cursive; font-size: 2.5rem; color: var(--neon-purple); margin-bottom: 20px; }
-        .insta-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; padding: 0 5%; }
-        .insta-item { aspect-ratio: 1/1; position: relative; overflow: hidden; background: #111; }
-        .insta-item img { width: 100%; height: 100%; object-fit: cover; transition: 0.5s; }
-        .insta-item:hover img { transform: scale(1.1); filter: brightness(0.6); }
-
-        /* Upload Tool */
-        .upload-hud {
-            margin: 40px 5%; padding: 40px; background: #111; border-radius: 30px;
-            text-align: center; border: 1px dashed var(--neon-green);
-        }
-
-        .del-btn {
-            position: absolute; top: 10px; right: 10px; background: rgba(255,0,0,0.7);
-            border: none; color: white; padding: 5px; border-radius: 5px; cursor: pointer;
-        }
-
-        @media (max-width: 600px) {
-            .reveal-name { font-size: 2rem; letter-spacing: 8px; }
-            .insta-grid { grid-template-columns: repeat(2, 1fr); }
-        }
     </style>
 </head>
 <body>
 
-    <div id="intro">
-        <div class="reveal-name">RAISA.PRO</div>
+    <div id="intro-overlay">
+        <div class="loader-content">
+            <div class="loader-ring"></div>
+            <h2 style="margin-top: 20px; font-family: 'Hind Siliguri'; letter-spacing: 5px; color: #fff;">ব্যারিস্টার রাইসা</h2>
+        </div>
     </div>
 
-    <div id="main-content">
+    <div id="main-ui">
         <header>
-            <div class="profile-container">
-                <div class="profile-ring">
-                    <img src="https://via.placeholder.com/150" alt="Raisa">
-                </div>
-                <div>
-                    <h2 style="font-size: 2.5rem;">ব্যারিস্টার রাইসা</h2>
-                    <p style="color: var(--neon-green); font-family: 'Orbitron';">@Lawyer_Raisa • Online</p>
+            <div class="profile-container" onclick="saveProfilePic()">
+                <img src="https://via.placeholder.com/150" alt="Barrister Raisa"> <div class="save-overlay">
+                    <svg class="svg-icon" viewBox="0 0 24 24" style="fill: var(--soft-teal); width: 15px; height: 15px;">
+                        <path d="M19 12v7H5v-7H3v7a2 2 0 002 2h14a2 2 0 002-2v-7h-2zm-6 .67l2.59-2.58L17 11.5l-5 5-5-5 1.41-1.41L11 12.67V3h2v9.67z"></path>
+                    </svg>
                 </div>
             </div>
+            <h1 class="title">ব্যারিস্টার রাইসা</h1>
+            <p style="color: var(--soft-teal); letter-spacing: 4px; text-transform: uppercase; font-size: 0.8rem;">অফিশিয়াল পোর্টাল</p>
         </header>
 
-        <section class="hub-grid">
-            <div class="social-card">
-                <div class="card-type"><i class="fab fa-instagram"></i> INSTAGRAM STYLE</div>
-                <h3 class="card-name">প্রোফাইল তথ্য</h3>
-                <p class="bio-text">LSE গ্র্যাজুয়েট | লন্ডন ভিত্তিক আইনজীবী। ন্যায়ের সন্ধানে এক নির্ভীক যাত্রা।</p>
-                <div class="stats">
-                    <div class="stat-item"><span class="stat-val">1.2K</span><span class="stat-lab">Followers</span></div>
-                    <div class="stat-item"><span class="stat-val">450</span><span class="stat-lab">Following</span></div>
+        <section class="details-grid">
+            <div class="info-card">
+                <div class="info-row">
+                    <svg class="svg-icon" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 110-5 2.5 2.5 0 010 5z"></path></svg>
+                    Location: Greater Manchester
                 </div>
-                <div class="btn-group">
-                    <button class="action-btn btn-primary"><i class="fas fa-user-plus"></i> ফলো করুন</button>
-                    <button class="action-btn btn-secondary"><i class="fab fa-whatsapp"></i> মেসেজ</button>
+                <div class="info-row">
+                    <svg class="svg-icon" viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"></path></svg>
+                    Bangladesh
                 </div>
             </div>
 
-            <div class="social-card">
-                <div class="card-type"><i class="fas fa-code"></i> DEVELOPER HUB</div>
-                <h3 class="card-name">শাকিল</h3>
-                <p class="bio-text">সফটওয়্যার আর্কিটেক্ট ও AI বিশেষজ্ঞ। আপনার ডিজিটাল স্বপ্নের কারিগর।</p>
-                <div class="info-row" style="margin-bottom: 15px; font-size: 0.9rem;">
-                    <div><i class="fas fa-bolt" style="color: var(--neon-green);"></i> ১৯৫ দেশে সার্ভিস</div>
-                    <div><i class="fas fa-terminal" style="color: var(--neon-green);"></i> মাইক্রো-SaaS এক্সপার্ট</div>
+            <div class="info-card" style="border-bottom: 3px solid var(--rose-gold);">
+                <div class="info-row">
+                    <svg class="svg-icon" viewBox="0 0 24 24"><path d="M21 7.28V5c0-1.1-.9-2-2-2H5c-1.11 0-2 .9-2 2v2.28c-1.11 0-2 .9-2 2V19c0 1.1.89 2 2 2h16c1.1 0 2-.9 2-2v-9.72c0-1.1-.9-2-2-2zm-7 1.22l2.59-2.58L17 7.11 12 12 7 7.11l1.41-1.41L11 8.5V2h2v6.5zm-5 8.5H5v-2h4v2zm0-4H5V8h4v2.5z"></path></svg>
+                    Birthday: March 19, 2005
                 </div>
-                <div class="btn-group">
-                    <button class="action-btn btn-secondary" style="border: 1px solid var(--neon-green);"><i class="fas fa-briefcase"></i> পোর্টফোলিও</button>
+                <div class="info-row">
+                    <svg class="svg-icon" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"></path></svg>
+                    Single
                 </div>
             </div>
         </section>
 
-        <h3 class="gallery-title">স্মৃতির গ্যালারি</h3>
-        <div class="insta-grid" id="photoWall">
-            </div>
-
-        <div class="upload-hud">
-            <h3 style="margin-bottom: 20px;">নতুন মোমেন্ট আপলোড করুন</h3>
-            <input type="file" id="up" accept="image/*" style="display: none;">
-            <button class="action-btn btn-primary" style="margin: 0 auto; max-width: 200px;" onclick="document.getElementById('up').click()">
-                <i class="fas fa-camera"></i> ক্যামেরা ওপেন করুন
-            </button>
-        </div>
-
-        <footer style="text-align: center; padding: 40px; color: #444;">
-            <p>DESIGNED IN CYBERSPACE BY SHAKIL</p>
-            <p style="font-size: 0.7rem;">VERSION 4.0.1 - DARK EMERALD</p>
+        <footer>
+            <p>© 2026 ব্যারিস্টার রাইসা। সকল তথ্য সংরক্ষিত।</p>
         </footer>
     </div>
 
     <script>
-        window.onload = () => {
+        // 1. Intro Screen Control (1 SEC)
+        window.addEventListener('load', () => {
             setTimeout(() => {
-                document.getElementById('intro').style.transform = 'scale(2)';
-                document.getElementById('intro').style.opacity = '0';
-                setTimeout(() => {
-                    document.getElementById('intro').style.display = 'none';
-                    document.getElementById('main-content').style.display = 'block';
-                }, 800);
-            }, 3000);
-            drawWall();
-        };
+                const intro = document.getElementById('intro-overlay');
+                const ui = document.getElementById('main-ui');
+                intro.style.transform = 'translateY(-100%)'; // নতুন 'স্লাইড-আপ' এনিমেশন
+                ui.style.display = 'flex';
+                setTimeout(() => { ui.style.opacity = '1'; document.body.style.overflow = 'auto'; }, 100);
+            }, 1000); // ঠিক ১ সেকেন্ড পর লোড হবে
+        });
 
-        const up = document.getElementById('up');
-        const wall = document.getElementById('photoWall');
-
-        up.onchange = function() {
-            const file = this.files[0];
-            if(file){
-                const r = new FileReader();
-                r.onload = (e) => {
-                    let d = JSON.parse(localStorage.getItem('cyber_db')) || [];
-                    d.push({id: Date.now(), src: e.target.result});
-                    localStorage.setItem('cyber_db', JSON.stringify(d));
-                    drawWall();
-                }
-                r.readAsDataURL(file);
+        // 2. Profile Photo Save Logic
+        function saveProfilePic() {
+            const imgSrc = document.querySelector('.profile-container img').src;
+            if(confirm('আপনি কি এই প্রোফাইল ছবিটি আপনার ডিভাইসে সেভ করতে চান?')) {
+                const link = document.createElement('a');
+                link.href = imgSrc;
+                link.download = 'Barrister_Raisa_Profile.png';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
             }
-        };
-
-        function drawWall() {
-            let d = JSON.parse(localStorage.getItem('cyber_db')) || [];
-            wall.innerHTML = '';
-            d.reverse().forEach(p => {
-                const item = document.createElement('div');
-                item.className = 'insta-item';
-                item.innerHTML = `<img src="${p.src}"><button class="del-btn" onclick="delP(${p.id})">×</button>`;
-                wall.appendChild(item);
-            });
-        }
-
-        function delP(id) {
-            let d = JSON.parse(localStorage.getItem('cyber_db')) || [];
-            d = d.filter(x => x.id !== id);
-            localStorage.setItem('cyber_db', JSON.stringify(d));
-            drawWall();
         }
     </script>
 </body>
