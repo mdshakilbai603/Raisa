@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ব্যারিস্টার রাইসা | অফিশিয়াল পোর্টাল</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;600&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --deep-space: #0f172a;
+            --royal-gold: #d4af37;
+            --neon-aqua: #00f2ff;
+            --glass-white: rgba(255, 255, 255, 0.05);
+            --text-main: #f8fafc;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Hind Siliguri', sans-serif; }
+
+        body { background-color: var(--deep-space); color: var(--text-main); overflow-x: hidden; }
+
+        /* --- 1. PREMIUM INTRO ANIMATION --- */
+        #intro-screen {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #000; display: flex; justify-content: center; align-items: center;
+            z-index: 1000; transition: transform 1s cubic-bezier(0.7, 0, 0.3, 1);
+        }
+
+        .intro-text {
+            font-family: 'Playfair Display', serif;
+            font-size: 5rem; color: var(--royal-gold);
+            letter-spacing: 10px; opacity: 0;
+            animation: textReveal 3s forwards;
+        }
+
+        @keyframes textReveal {
+            0% { opacity: 0; letter-spacing: 20px; filter: blur(10px); }
+            50% { opacity: 1; filter: blur(0px); }
+            100% { opacity: 1; letter-spacing: 8px; }
+        }
+
+        /* --- 2. MAIN LAYOUT --- */
+        #app { display: none; padding: 40px 20px; max-width: 1200px; margin: 0 auto; }
+
+        header { text-align: center; margin-bottom: 50px; }
+        .profile-badge {
+            display: inline-block; padding: 5px 15px; border: 1px solid var(--royal-gold);
+            color: var(--royal-gold); border-radius: 50px; margin-bottom: 10px; font-size: 0.9rem;
+        }
+
+        h1.title { font-size: 3.5rem; margin-bottom: 10px; background: linear-gradient(to right, #fff, var(--royal-gold)); -webkit-background-clip: text; color: transparent; }
+
+        /* --- 3. UPLOAD AREA --- */
+        .upload-container {
+            background: var(--glass-white); border: 2px dashed var(--royal-gold);
+            border-radius: 20px; padding: 40px; text-align: center; margin-bottom: 40px;
+            transition: 0.3s;
+        }
+
+        .upload-container:hover { background: rgba(212, 175, 55, 0.05); }
+
+        .custom-file-upload {
+            background: var(--royal-gold); color: #000; padding: 12px 30px;
+            border-radius: 10px; cursor: pointer; font-weight: 600; display: inline-block;
+            transition: 0.3s;
+        }
+
+        .custom-file-upload:hover { transform: scale(1.05); background: #fff; }
+
+        /* --- 4. GALLERY --- */
+        .gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px; }
+
+        .photo-card {
+            position: relative; border-radius: 15px; overflow: hidden;
+            background: #1e293b; border: 1px solid rgba(255,255,255,0.1);
+            animation: fadeIn 0.8s ease forwards;
+        }
+
+        .photo-card img { width: 100%; height: 350px; object-fit: cover; transition: 0.5s; }
+        .photo-card:hover img { transform: scale(1.1); filter: brightness(0.7); }
+
+        .delete-btn {
+            position: absolute; bottom: 20px; right: 20px;
+            background: rgba(255, 0, 0, 0.8); color: white; border: none;
+            width: 40px; height: 40px; border-radius: 50%; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            opacity: 0; transition: 0.3s;
+        }
+
+        .photo-card:hover .delete-btn { opacity: 1; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .intro-text { font-size: 2.5rem; }
+            h1.title { font-size: 2.2rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="intro-screen">
+        <div class="intro-text">RAISA</div>
+    </div>
+
+    <div id="app">
+        <header>
+            <div class="profile-badge">Official Portfolio</div>
+            <h1 class="title">ব্যারিস্টার রাইসা</h1>
+            <p style="color: var(--royal-gold); font-size: 1.2rem;">ব্যারিস্টার-অ্যাট-ল | LSE গ্র্যাজুয়েট</p>
+        </header>
+
+        <section class="upload-area">
+            <div class="upload-container">
+                <i class="fas fa-camera-retro" style="font-size: 2.5rem; color: var(--royal-gold); margin-bottom: 15px;"></i>
+                <h3 style="margin-bottom: 20px;">আপনার নতুন মুহূর্ত যুক্ত করুন</h3>
+                <input type="file" id="imageInput" accept="image/*" style="display: none;">
+                <label for="imageInput" class="custom-file-upload">
+                    <i class="fas fa-plus"></i> ছবি নির্বাচন করুন
+                </label>
+            </div>
+        </section>
+
+        <section class="gallery-grid" id="galleryContainer">
+            </section>
+
+        <footer style="margin-top: 100px; text-align: center; padding: 20px; color: grey;">
+            <p>© 2026 ব্যারিস্টার রাইসা | কোডেড বাই শাকিল</p>
+        </footer>
+    </div>
+
+    <script>
+        // 1. Intro Screen Logic
+        window.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                document.getElementById('intro-screen').style.transform = 'translateY(-100%)';
+                document.getElementById('app').style.display = 'block';
+            }, 3500);
+            renderPhotos();
+        });
+
+        // 2. LocalStorage Photo Logic
+        const imageInput = document.getElementById('imageInput');
+        const galleryContainer = document.getElementById('galleryContainer');
+
+        imageInput.addEventListener('change', function() {
+            const file = this.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const base64Image = e.target.result;
+                    savePhoto(base64Image);
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+
+        function savePhoto(imageData) {
+            let photos = JSON.parse(localStorage.getItem('raisa_photos')) || [];
+            photos.push({ id: Date.now(), data: imageData });
+            localStorage.setItem('raisa_photos', JSON.stringify(photos));
+            renderPhotos();
+        }
+
+        function renderPhotos() {
+            let photos = JSON.parse(localStorage.getItem('raisa_photos')) || [];
+            galleryContainer.innerHTML = '';
+            photos.reverse().forEach(photo => {
+                const card = document.createElement('div');
+                card.className = 'photo-card';
+                card.innerHTML = `
+                    <img src="${photo.data}" alt="Raisa's Gallery">
+                    <button class="delete-btn" onclick="deletePhoto(${photo.id})">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                `;
+                galleryContainer.appendChild(card);
+            });
+        }
+
+        function deletePhoto(id) {
+            if(confirm('আপনি কি এই ছবিটি মুছে ফেলতে চান?')) {
+                let photos = JSON.parse(localStorage.getItem('raisa_photos')) || [];
+                photos = photos.filter(p => p.id !== id);
+                localStorage.setItem('raisa_photos', JSON.stringify(photos));
+                renderPhotos();
+            }
+        }
+    </script>
+</body>
+</html>
