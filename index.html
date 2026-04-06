@@ -3,210 +3,212 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ABSTRACT | GLOBAL ENCRYPTED NETWORK</title>
+    <title>ABSTRACT | UNIVERSAL NODE</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;300;400;700;900&family=Playfair+Display:ital,wght@0,400;1,700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Playfair+Display:ital,wght@1,700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
         :root {
-            --bg: #030303;
-            --accent: #e0c097; /* Rose Gold */
-            --glass: rgba(255, 255, 255, 0.03);
-            --border: rgba(224, 192, 151, 0.15);
-            --silver: #888;
+            --bg: #080808;
+            --card: #111111;
+            --accent: #e0c097;
+            --text: #ffffff;
+            --dim: #888888;
+            --border: rgba(224, 192, 151, 0.1);
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; outline: none; }
-        body { background: var(--bg); color: #fff; font-family: 'Inter', sans-serif; overflow: hidden; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body { background: var(--bg); color: var(--text); overflow-x: hidden; }
 
-        /* --- ৩ সেকেন্ডের গ্লোবাল ইন্ট্রো এনিমেশন --- */
-        #intro-shutter {
-            position: fixed; inset: 0; background: #000; z-index: 10000;
+        /* --- লাইটওয়েট এন্ট্রান্স --- */
+        #gate {
+            position: fixed; inset: 0; background: #000; z-index: 9999;
             display: flex; justify-content: center; align-items: center;
-            transition: 1.5s cubic-bezier(1, 0, 0, 1);
+            transition: 1s ease-in-out;
         }
-        .intro-content { text-align: center; }
-        .intro-logo { font-family: 'Playfair Display'; font-size: 3rem; letter-spacing: 25px; color: var(--accent); opacity: 0; animation: reveal 2.5s forwards; }
-        @keyframes reveal { 0% { opacity: 0; letter-spacing: 5px; filter: blur(10px); } 100% { opacity: 1; letter-spacing: 25px; filter: blur(0px); } }
+        .gate-label { font-family: 'Playfair Display'; font-size: 2rem; letter-spacing: 15px; color: var(--accent); animation: pulse 2s infinite; }
 
-        /* --- মেইন অ্যাপ লেআউট --- */
-        .abstract-wrapper { display: grid; grid-template-columns: 80px 350px 1fr; height: 100vh; width: 100vw; opacity: 0; transition: 2s; }
-        .loaded .abstract-wrapper { opacity: 1; }
+        /* --- মেইন কন্টেইনার (Flex-based for all devices) --- */
+        .wrapper { display: flex; height: 100vh; width: 100vw; opacity: 0; transition: 1.5s; }
+        .active .wrapper { opacity: 1; }
 
-        /* ১. গ্লোবাল নেভিগেশন বার (সবার বামে) */
-        nav { background: #000; border-right: 1px solid var(--border); display: flex; flex-direction: column; align-items: center; padding: 30px 0; }
-        nav .nav-icon { font-size: 1.4rem; color: var(--silver); margin-bottom: 45px; cursor: pointer; transition: 0.4s; position: relative; }
-        nav .nav-icon:hover, nav .nav-icon.active { color: var(--accent); transform: scale(1.1); }
-        nav .nav-icon.active::after { content: ''; position: absolute; left: -25px; top: 5px; width: 3px; height: 20px; background: var(--accent); }
+        /* সাইড নেভিগেশন */
+        nav { width: 70px; background: #000; border-right: 1px solid var(--border); display: flex; flex-direction: column; align-items: center; padding: 25px 0; }
+        nav i { font-size: 1.2rem; color: var(--dim); margin-bottom: 35px; cursor: pointer; transition: 0.3s; }
+        nav i:hover, nav i.active { color: var(--accent); }
 
-        /* ২. ইউজার লিস্ট ও সার্চ (মাঝে) */
-        .sidebar { background: #050505; border-right: 1px solid var(--border); display: flex; flex-direction: column; }
-        .sidebar-header { padding: 30px; border-bottom: 1px solid var(--border); }
-        .sidebar-header h2 { font-family: 'Playfair Display'; font-style: italic; font-size: 1.5rem; letter-spacing: 2px; }
-        .search-container { padding: 15px 30px; }
-        .search-container input { width: 100%; background: var(--glass); border: 1px solid var(--border); padding: 12px 15px; color: #fff; font-size: 0.8rem; letter-spacing: 1px; }
+        /* প্রোফাইল ও চ্যাট লিস্ট প্যানেল */
+        .panel { width: 320px; background: #0a0a0a; border-right: 1px solid var(--border); display: flex; flex-direction: column; }
+        .panel-header { padding: 25px; border-bottom: 1px solid var(--border); }
+        .panel-header h2 { font-family: 'Playfair Display'; font-size: 1.2rem; color: var(--accent); letter-spacing: 2px; }
+
+        .search { padding: 15px 25px; }
+        .search input { width: 100%; background: var(--card); border: 1px solid var(--border); padding: 10px; color: #fff; border-radius: 4px; font-size: 0.8rem; }
+
+        .list { flex: 1; overflow-y: auto; padding: 10px; }
+        .user { display: flex; align-items: center; padding: 12px; margin-bottom: 8px; cursor: pointer; border-radius: 8px; transition: 0.2s; }
+        .user:hover { background: var(--card); }
+        .user img { width: 45px; height: 45px; border-radius: 50%; border: 1px solid var(--accent); margin-right: 12px; }
+        .user-meta h4 { font-size: 0.85rem; font-weight: 600; }
+        .user-meta p { font-size: 0.7rem; color: var(--dim); }
+
+        /* চ্যাট এরিয়া */
+        main { flex: 1; display: flex; flex-direction: column; background: #080808; position: relative; }
+        .chat-top { padding: 20px 30px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
         
-        .user-list { flex: 1; overflow-y: auto; padding: 10px 20px; }
-        .user-item { display: flex; align-items: center; padding: 15px; border-radius: 2px; cursor: pointer; transition: 0.3s; margin-bottom: 10px; border: 1px solid transparent; }
-        .user-item:hover { background: var(--glass); border-color: var(--border); }
-        .user-avatar { width: 50px; height: 50px; border-radius: 50%; border: 1px solid var(--accent); margin-right: 15px; object-fit: cover; }
-        .user-info h4 { font-size: 0.9rem; letter-spacing: 1px; }
-        .user-info p { font-size: 0.7rem; color: var(--silver); margin-top: 4px; }
-
-        /* ৩. চ্যাট ও ইন্টারফেস এরিয়া (ডানে) */
-        main { display: flex; flex-direction: column; position: relative; background: radial-gradient(circle at 50% 50%, #0a0a0a 0%, #030303 100%); }
-        .top-bar { padding: 20px 50px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
-        .status-pill { padding: 5px 15px; background: rgba(0, 255, 0, 0.05); color: #00ff00; font-size: 0.6rem; border-radius: 20px; letter-spacing: 2px; border: 1px solid rgba(0, 255, 0, 0.2); }
-        
-        .chat-canvas { flex: 1; padding: 50px; overflow-y: auto; display: flex; flex-direction: column; gap: 30px; }
-        .bubble { max-width: 500px; padding: 20px 25px; line-height: 1.6; font-size: 0.95rem; position: relative; }
-        .bubble.sent { align-self: flex-end; background: var(--accent); color: #000; border-radius: 30px 30px 0 30px; font-weight: 500; }
-        .bubble.received { align-self: flex-start; background: var(--glass); border: 1px solid var(--border); border-radius: 30px 30px 30px 0; color: #eee; }
+        .chat-view { flex: 1; padding: 30px; overflow-y: auto; display: flex; flex-direction: column; gap: 20px; }
+        .bubble { max-width: 70%; padding: 15px 20px; font-size: 0.9rem; line-height: 1.5; border-radius: 18px; position: relative; }
+        .bubble.me { align-self: flex-end; background: var(--accent); color: #000; border-bottom-right-radius: 2px; font-weight: 500; }
+        .bubble.them { align-self: flex-start; background: var(--card); border: 1px solid var(--border); border-bottom-left-radius: 2px; }
 
         /* ইনপুট টুলবার */
-        .action-bar { padding: 35px 50px; display: flex; align-items: center; gap: 25px; border-top: 1px solid var(--border); }
-        .action-bar input { flex: 1; background: transparent; border: none; font-size: 1rem; color: #fff; letter-spacing: 1px; }
-        .action-btn { color: var(--silver); font-size: 1.2rem; cursor: pointer; transition: 0.3s; }
-        .action-btn:hover { color: var(--accent); transform: translateY(-2px); }
+        .input-box { padding: 25px 30px; border-top: 1px solid var(--border); display: flex; align-items: center; gap: 15px; }
+        .input-box input { flex: 1; background: transparent; border: none; color: #fff; font-size: 0.95rem; }
+        .input-box i { color: var(--dim); cursor: pointer; font-size: 1.1rem; }
+        .input-box i:hover { color: var(--accent); }
 
-        /* --- প্রোফাইল সেটআপ (গ্লোবাল ইউজার ইনপুট) --- */
-        #registration-screen {
-            position: fixed; inset: 0; background: #000; z-index: 10001;
+        /* --- গ্লোবাল প্রোফাইল ক্রিয়েশন (পপআপ) --- */
+        #profile-setup {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 10000;
             display: none; justify-content: center; align-items: center; padding: 20px;
         }
-        .reg-card { width: 100%; max-width: 600px; padding: 60px; background: #050505; border: 1px solid var(--accent); }
-        .reg-card h1 { font-family: 'Playfair Display'; font-size: 2.5rem; margin-bottom: 40px; color: var(--accent); }
-        .input-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 25px; }
-        .field { margin-bottom: 25px; }
-        .field label { display: block; font-size: 0.65rem; color: var(--accent); letter-spacing: 3px; margin-bottom: 10px; text-transform: uppercase; }
-        .field input, .field textarea, .field select { width: 100%; background: var(--glass); border: 1px solid var(--border); padding: 15px; color: #fff; }
+        .setup-card { width: 100%; max-width: 450px; background: #111; padding: 40px; border: 1px solid var(--accent); border-radius: 4px; }
+        .setup-card h3 { font-family: 'Playfair Display'; margin-bottom: 25px; color: var(--accent); font-size: 1.8rem; }
+        .input-group { margin-bottom: 20px; }
+        .input-group label { display: block; font-size: 0.65rem; color: var(--accent); letter-spacing: 2px; margin-bottom: 8px; }
+        .input-group input, .input-group select, .input-group textarea { width: 100%; background: #000; border: 1px solid var(--border); padding: 12px; color: #fff; }
+        
+        /* রেসপনসিভনেস (Responsive) */
+        @media (max-width: 768px) {
+            .panel { display: none; } /* মোবাইলে শুধু চ্যাট দেখাবে */
+            nav { width: 60px; }
+            .bubble { max-width: 85%; }
+        }
 
-        /* ভেরিফিকেশন ব্যাজ */
-        .verified-mark { color: #3498db; margin-left: 5px; font-size: 0.8rem; }
+        @keyframes pulse { 0%, 100% { opacity: 0.4; } 50% { opacity: 1; } }
     </style>
 </head>
 <body>
 
-    <div id="intro-shutter"><div class="intro-content"><div class="intro-logo">ABSTRACT</div></div></div>
+    <div id="gate"><div class="gate-label">ABSTRACT</div></div>
 
-    <div id="registration-screen">
-        <div class="reg-card">
-            <h1>PROTOCOL_INIT</h1>
-            <div class="input-row">
-                <div class="field"><label>FIRST NAME</label><input type="text" id="fname" placeholder="John"></div>
-                <div class="field"><label>LAST NAME</label><input type="text" id="lname" placeholder="Doe"></div>
+    <div id="profile-setup">
+        <div class="setup-card">
+            <h3>IDENTITY_INIT</h3>
+            <div class="input-group">
+                <label>AVATAR (IMAGE URL)</label>
+                <input type="text" id="avatar-url" placeholder="https://...">
             </div>
-            <div class="field"><label>GLOBAL IDENTITY (EMAIL)</label><input type="email" id="email" placeholder="identity@global.com"></div>
-            <div class="field"><label>LOCATION (CITY, COUNTRY)</label><input type="text" id="loc" placeholder="Mymensingh, Bangladesh"></div>
-            <div class="field">
-                <label>RELATIONSHIP STATUS</label>
-                <select id="status">
-                    <option value="Single">Single</option>
-                    <option value="Complicated">Complicated</option>
-                    <option value="Encrypted">Encrypted</option>
+            <div style="display: flex; gap: 10px;">
+                <div class="input-group" style="flex: 1;"><label>FIRST NAME</label><input type="text" id="fname"></div>
+                <div class="input-group" style="flex: 1;"><label>LAST NAME</label><input type="text" id="lname"></div>
+            </div>
+            <div class="input-group"><label>LOCATION (CITY, COUNTRY)</label><input type="text" id="location"></div>
+            <div class="input-group"><label>RELATIONSHIP</label>
+                <select id="rel-status">
+                    <option>Single</option>
+                    <option>In a Relationship</option>
+                    <option>Encrypted</option>
                 </select>
             </div>
-            <button onclick="activateSystem()" style="width: 100%; background: var(--accent); padding: 20px; border: none; font-weight: 900; letter-spacing: 5px; cursor: pointer;">ACTIVATE GLOBAL NODE</button>
+            <div class="input-group"><label>YOUR BIO / OPINION</label><textarea id="bio" rows="2"></textarea></div>
+            <button onclick="startSystem()" style="width: 100%; background: var(--accent); border: none; padding: 15px; font-weight: 800; letter-spacing: 3px; cursor: pointer;">ACTIVATE GLOBAL NODE</button>
         </div>
     </div>
 
-    <div class="abstract-wrapper">
+    <div class="wrapper">
         <nav>
-            <div class="nav-icon active"><i class="fas fa-layer-group"></i></div>
-            <div class="nav-icon"><i class="fas fa-globe-americas"></i></div>
-            <div class="nav-icon"><i class="fas fa-comment-dots"></i></div>
-            <div class="nav-icon"><i class="fas fa-shield-alt"></i></div>
-            <div class="nav-icon" style="margin-top: auto;" onclick="terminateSession()"><i class="fas fa-power-off"></i></div>
+            <i class="fas fa-terminal active"></i>
+            <i class="fas fa-globe-americas"></i>
+            <i class="fas fa-comment-alt"></i>
+            <i class="fas fa-map-marker-alt" onclick="revealMe()"></i>
+            <i class="fas fa-power-off" style="margin-top: auto;" onclick="wipeData()"></i>
         </nav>
 
-        <aside class="sidebar">
-            <div class="sidebar-header"><h2>NET_CORE</h2></div>
-            <div class="search-container"><input type="text" placeholder="SEARCH GLOBAL IDENTITY..."></div>
-            <div class="user-list" id="global-users">
-                <div class="user-item">
-                    <img src="https://via.placeholder.com/50" class="user-avatar">
-                    <div class="user-info"><h4>Anonymous_Node <i class="fas fa-check-circle verified-mark"></i></h4><p>Location: London, UK</p></div>
+        <aside class="panel">
+            <div class="panel-header"><h2>NET_CORE</h2></div>
+            <div class="search"><input type="text" placeholder="Search Encrypted Nodes..."></div>
+            <div class="list" id="users-container">
+                <div class="user">
+                    <img src="https://via.placeholder.com/45" alt="">
+                    <div class="user-meta"><h4>Global_Admin <i class="fas fa-check-circle" style="color:#3498db; font-size:0.7rem;"></i></h4><p>Mymensingh, BD</p></div>
                 </div>
             </div>
         </aside>
 
         <main>
-            <div class="top-bar">
-                <div><h3 id="current-chat">GLOBAL_ENCRYPTED_CHANNEL</h3><p style="font-size: 0.6rem; color: var(--silver); letter-spacing: 2px;">ENCRYPTION: AES-256 ACTIVE</p></div>
-                <div class="status-pill">NODE_ONLINE</div>
-                <div style="display: flex; gap: 25px; color: var(--accent);">
-                    <i class="fas fa-phone-alt cursor-pointer"></i>
-                    <i class="fas fa-video cursor-pointer"></i>
-                    <i class="fas fa-map-marked-alt" onclick="revealLocation()"></i>
+            <div class="chat-top">
+                <div>
+                    <h3 id="target">GLOBAL_LOBBY</h3>
+                    <p style="font-size: 0.6rem; color: var(--accent); letter-spacing: 2px;">SECURE 256-BIT ENCRYPTION</p>
+                </div>
+                <div style="display: flex; gap: 20px; color: var(--accent);">
+                    <i class="fas fa-phone-alt"></i>
+                    <i class="fas fa-video"></i>
+                    <i class="fas fa-info-circle"></i>
                 </div>
             </div>
 
-            <div class="chat-canvas" id="msg-flow">
-                <div class="bubble received">Welcome to Abstract Global. Your identity is now hidden behind 7 layers of encryption.</div>
-                <div class="bubble sent">System ready. Location tracking and security protocols are operational.</div>
+            <div class="chat-view" id="chat-flow">
+                <div class="bubble them">System online. Global synchronization complete.</div>
+                <div class="bubble me">Node identity verified. Ready for transmission.</div>
             </div>
 
-            <div class="action-bar">
-                <i class="far fa-grin-alt action-btn"></i>
-                <input type="text" id="chat-input" placeholder="Type your encrypted message...">
-                <div style="display: flex; gap: 20px;">
-                    <i class="fas fa-paperclip action-btn"></i>
-                    <i class="fas fa-microphone action-btn"></i>
-                    <i class="fas fa-paper-plane action-btn" style="color: var(--accent);" onclick="broadcast()"></i>
-                </div>
+            <div class="input-box">
+                <i class="far fa-smile"></i>
+                <input type="text" id="main-input" placeholder="Enter encrypted message...">
+                <i class="fas fa-paperclip"></i>
+                <i class="fas fa-paper-plane" style="color: var(--accent);" onclick="pushMsg()"></i>
             </div>
         </main>
     </div>
 
     <script>
-        // ৩ সেকেন্ডের গ্লোবাল লোডার লজিক
+        // ১ সেকেন্ডের ফাস্ট ইন্ট্রো
         window.onload = () => {
             setTimeout(() => {
-                document.getElementById('intro-shutter').style.transform = 'scale(1.2)';
-                document.getElementById('intro-shutter').style.opacity = '0';
-                setTimeout(() => { 
-                    document.getElementById('intro-shutter').style.display = 'none';
-                    document.body.classList.add('loaded');
-                    if(!localStorage.getItem('global_node')) {
-                        document.getElementById('registration-screen').style.display = 'flex';
+                document.getElementById('gate').style.opacity = '0';
+                setTimeout(() => {
+                    document.getElementById('gate').style.display = 'none';
+                    document.body.classList.add('active');
+                    if(!localStorage.getItem('node_id')) {
+                        document.getElementById('profile-setup').style.display = 'flex';
                     }
                 }, 1000);
-            }, 3000);
+            }, 1000);
         };
 
-        function activateSystem() {
-            const user = {
-                firstName: document.getElementById('fname').value,
-                lastName: document.getElementById('lname').value,
-                location: document.getElementById('loc').value,
-                status: document.getElementById('status').value
+        function startSystem() {
+            const nodeData = {
+                name: document.getElementById('fname').value + ' ' + document.getElementById('lname').value,
+                loc: document.getElementById('location').value,
+                rel: document.getElementById('rel-status').value
             };
-            if(!user.firstName) { alert("Identity Required."); return; }
-            localStorage.setItem('global_node', JSON.stringify(user));
-            document.getElementById('registration-screen').style.fadeOut;
+            if(!document.getElementById('fname').value) return alert("Identity Required.");
+            localStorage.setItem('node_id', JSON.stringify(nodeData));
             location.reload();
         }
 
-        function broadcast() {
-            const input = document.getElementById('chat-input');
-            if(!input.value) return;
-            const bubble = document.createElement('div');
-            bubble.className = 'bubble sent';
-            bubble.innerText = input.value;
-            document.getElementById('msg-flow').appendChild(bubble);
-            input.value = '';
-            document.getElementById('msg-flow').scrollTop = document.getElementById('msg-flow').scrollHeight;
+        function pushMsg() {
+            const inp = document.getElementById('main-input');
+            if(!inp.value) return;
+            const b = document.createElement('div');
+            b.className = 'bubble me';
+            b.innerText = inp.value;
+            document.getElementById('chat-flow').appendChild(b);
+            inp.value = '';
+            document.getElementById('chat-flow').scrollTop = document.getElementById('chat-flow').scrollHeight;
         }
 
-        function revealLocation() {
+        function revealMe() {
             navigator.geolocation.getCurrentPosition(p => {
-                alert(`Real-time Node Location: ${p.coords.latitude}, ${p.coords.longitude}\nTracking Protection: ACTIVE`);
+                alert(`Real-time Tracker: ${p.coords.latitude}, ${p.coords.longitude}\nProtocol: ANTI-BLACKMAIL ACTIVE`);
             });
         }
 
-        function terminateSession() {
-            if(confirm("Terminate this Global Node? All data will be wiped.")) {
+        function wipeData() {
+            if(confirm("Terminate this Global Node?")) {
                 localStorage.clear();
                 location.reload();
             }
