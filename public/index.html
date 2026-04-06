@@ -21,13 +21,13 @@
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
-        body { background: var(--bg); color: var(--text); overflow-x: hidden; }
+        body { background: var(--bg); color: var(--text); overflow: hidden; }
 
-        /* --- লাইটওয়েট এন্ট্রাস --- */
+        /* --- ইন্ট্রো গেট ফিক্স --- */
         #gate {
             position: fixed; inset: 0; background: #000; z-index: 9999;
             display: flex; justify-content: center; align-items: center;
-            transition: 1s ease-in-out;
+            transition: 0.8s ease-in-out; pointer-events: none;
         }
         .gate-label { font-family: 'Playfair Display'; font-size: 2rem; letter-spacing: 15px; color: var(--accent); animation: pulse 2s infinite; }
 
@@ -49,68 +49,39 @@
         .user { display: flex; align-items: center; padding: 12px; margin-bottom: 8px; cursor: pointer; border-radius: 8px; transition: 0.2s; }
         .user:hover { background: var(--card); }
         .user img { width: 45px; height: 45px; border-radius: 50%; border: 1px solid var(--accent); margin-right: 12px; }
-        .user-meta h4 { font-size: 0.85rem; font-weight: 600; }
-        .user-meta p { font-size: 0.7rem; color: var(--dim); }
-
-        main { flex: 1; display: flex; flex-direction: column; background: #080808; position: relative; }
-        .chat-top { padding: 20px 30px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
         
+        main { flex: 1; display: flex; flex-direction: column; background: #080808; position: relative; }
         .chat-view { flex: 1; padding: 30px; overflow-y: auto; display: flex; flex-direction: column; gap: 20px; }
-        .bubble { max-width: 70%; padding: 15px 20px; font-size: 0.9rem; line-height: 1.5; border-radius: 18px; position: relative; word-wrap: break-word; }
-        .bubble strong { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; color: var(--dim); display: block; margin-bottom: 5px; }
-        .bubble.me { align-self: flex-end; background: var(--accent); color: #000; border-bottom-right-radius: 2px; font-weight: 500; }
-        .bubble.me strong { color: rgba(0,0,0,0.5); }
+        .bubble { max-width: 70%; padding: 12px 18px; font-size: 0.9rem; border-radius: 18px; position: relative; }
+        .bubble.me { align-self: flex-end; background: var(--accent); color: #000; border-bottom-right-radius: 2px; }
         .bubble.them { align-self: flex-start; background: var(--card); border: 1px solid var(--border); border-bottom-left-radius: 2px; }
 
-        .input-box { padding: 25px 30px; border-top: 1px solid var(--border); display: flex; align-items: center; gap: 15px; }
-        .input-box input { flex: 1; background: transparent; border: none; color: #fff; font-size: 0.95rem; }
-        .input-box i { color: var(--dim); cursor: pointer; font-size: 1.1rem; }
-        .input-box i:hover { color: var(--accent); }
+        .input-box { padding: 20px 30px; border-top: 1px solid var(--border); display: flex; align-items: center; gap: 15px; }
+        .input-box input { flex: 1; background: transparent; border: none; color: #fff; }
 
         #profile-setup {
-            position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 10000;
+            position: fixed; inset: 0; background: rgba(0,0,0,0.98); z-index: 9000;
             display: none; justify-content: center; align-items: center; padding: 20px;
         }
-        .setup-card { width: 100%; max-width: 450px; background: #111; padding: 40px; border: 1px solid var(--accent); border-radius: 4px; }
-        .setup-card h3 { font-family: 'Playfair Display'; margin-bottom: 25px; color: var(--accent); font-size: 1.8rem; }
-        .input-group { margin-bottom: 20px; }
-        .input-group label { display: block; font-size: 0.65rem; color: var(--accent); letter-spacing: 2px; margin-bottom: 8px; }
-        .input-group input, .input-group select, .input-group textarea { width: 100%; background: #000; border: 1px solid var(--border); padding: 12px; color: #fff; }
-        
-        @media (max-width: 768px) {
-            .panel { display: none; }
-            nav { width: 60px; }
-            .bubble { max-width: 85%; }
-        }
+        .setup-card { width: 100%; max-width: 400px; background: #111; padding: 30px; border: 1px solid var(--accent); }
 
         @keyframes pulse { 0%, 100% { opacity: 0.4; } 50% { opacity: 1; } }
     </style>
 </head>
-<body>
+<body class="">
 
     <div id="gate"><div class="gate-label">ABSTRACT</div></div>
 
     <div id="profile-setup">
         <div class="setup-card">
-            <h3>IDENTITY_INIT</h3>
-            <div class="input-group">
-                <label>AVATAR (IMAGE URL)</label>
-                <input type="text" id="avatar-url" placeholder="https://...">
+            <h3 style="color:var(--accent); margin-bottom:20px;">IDENTITY_INIT</h3>
+            <input type="text" id="avatar-url" placeholder="Avatar URL" style="width:100%; padding:10px; margin-bottom:10px; background:#000; color:#fff; border:1px solid var(--border);">
+            <div style="display:flex; gap:10px;">
+                <input type="text" id="fname" placeholder="First Name" style="flex:1; padding:10px; margin-bottom:10px; background:#000; color:#fff; border:1px solid var(--border);">
+                <input type="text" id="lname" placeholder="Last Name" style="flex:1; padding:10px; margin-bottom:10px; background:#000; color:#fff; border:1px solid var(--border);">
             </div>
-            <div style="display: flex; gap: 10px;">
-                <div class="input-group" style="flex: 1;"><label>FIRST NAME</label><input type="text" id="fname"></div>
-                <div class="input-group" style="flex: 1;"><label>LAST NAME</label><input type="text" id="lname"></div>
-            </div>
-            <div class="input-group"><label>LOCATION (CITY, COUNTRY)</label><input type="text" id="location"></div>
-            <div class="input-group"><label>RELATIONSHIP</label>
-                <select id="rel-status">
-                    <option>Single</option>
-                    <option>In a Relationship</option>
-                    <option>Encrypted</option>
-                </select>
-            </div>
-            <div class="input-group"><label>YOUR BIO / OPINION</label><textarea id="bio" rows="2"></textarea></div>
-            <button onclick="startSystem()" style="width: 100%; background: var(--accent); border: none; padding: 15px; font-weight: 800; letter-spacing: 3px; cursor: pointer;">ACTIVATE GLOBAL NODE</button>
+            <input type="text" id="location" placeholder="Location" style="width:100%; padding:10px; margin-bottom:20px; background:#000; color:#fff; border:1px solid var(--border);">
+            <button onclick="startSystem()" style="width: 100%; background: var(--accent); border: none; padding: 15px; cursor: pointer; font-weight:bold;">ACTIVATE NODE</button>
         </div>
     </div>
 
@@ -118,77 +89,53 @@
         <nav>
             <i class="fas fa-terminal active"></i>
             <i class="fas fa-globe-americas"></i>
-            <i class="fas fa-comment-alt"></i>
-            <i class="fas fa-map-marker-alt" onclick="revealMe()"></i>
             <i class="fas fa-power-off" style="margin-top: auto;" onclick="wipeData()"></i>
         </nav>
-
         <aside class="panel">
             <div class="panel-header"><h2>NET_CORE</h2></div>
-            <div class="search">
-                <input type="text" id="global-search" placeholder="Search Nodes or Locations..." onkeyup="filterUsers()">
-            </div>
-            <div class="list" id="users-container">
-                </div>
+            <div class="list" id="users-container"></div>
         </aside>
-
         <main>
-            <div class="chat-top">
-                <div>
-                    <h3 id="target">GLOBAL_LOBBY</h3>
-                    <p style="font-size: 0.6rem; color: var(--accent); letter-spacing: 2px;">SECURE 256-BIT ENCRYPTION</p>
-                </div>
-                <div style="display: flex; gap: 20px; color: var(--accent);">
-                    <i class="fas fa-phone-alt"></i>
-                    <i class="fas fa-video"></i>
-                    <i class="fas fa-info-circle"></i>
-                </div>
-            </div>
-
-            <div class="chat-view" id="chat-flow">
-                <div class="bubble them">System online. Global synchronization complete.</div>
-            </div>
-
+            <div class="chat-view" id="chat-flow"></div>
             <div class="input-box">
-                <i class="far fa-smile"></i>
                 <input type="file" id="file-input" style="display: none;" onchange="sendFile()">
-                <i class="fas fa-paperclip" onclick="document.getElementById('file-input').click()"></i>
+                <i class="fas fa-paperclip" onclick="document.getElementById('file-input').click()" style="cursor:pointer; color:var(--dim);"></i>
                 <input type="text" id="main-input" placeholder="Enter encrypted message...">
-                <i class="fas fa-paper-plane" style="color: var(--accent);" onclick="pushMsg()"></i>
+                <i class="fas fa-paper-plane" style="color: var(--accent); cursor:pointer;" onclick="pushMsg()"></i>
             </div>
         </main>
     </div>
 
     <script>
-        const socket = io();
-        let allNodes = [];
-
-        // IndexedDB সেটআপ (মেসেজ এবং ফাইল ব্রাউজারে সেভ রাখার জন্য)
+        // সকেট কনফিগারেশন (Vercel সাপোর্ট করবে)
+        const socket = io({ transports: ['polling', 'websocket'] });
         let db;
-        const dbReq = indexedDB.open("AbstractVault", 1);
-        dbReq.onupgradeneeded = e => {
-            db = e.target.result;
-            if (!db.objectStoreNames.contains("messages")) db.createObjectStore("messages", { keyPath: "id", autoIncrement: true });
-        };
-        dbReq.onsuccess = e => {
-            db = e.target.result;
-            loadStoredMessages();
-        };
 
+        // ইন্ট্রো এবং অটো-লগইন লজিক
         window.onload = () => {
+            const gate = document.getElementById('gate');
             setTimeout(() => {
-                document.getElementById('gate').style.opacity = '0';
+                gate.style.opacity = '0';
                 setTimeout(() => {
-                    document.getElementById('gate').style.display = 'none';
+                    gate.style.display = 'none';
                     document.body.classList.add('active');
-                    if(!localStorage.getItem('node_id')) {
+                    
+                    const savedUser = localStorage.getItem('node_id');
+                    if(!savedUser) {
                         document.getElementById('profile-setup').style.display = 'flex';
                     } else {
-                        socket.emit('register_node', JSON.parse(localStorage.getItem('node_id')));
+                        socket.emit('register_node', JSON.parse(savedUser));
                     }
-                }, 1000);
-            }, 1000);
+                }, 800);
+            }, 1500);
+            initDB();
         };
+
+        function initDB() {
+            const req = indexedDB.open("AbstractVault", 1);
+            req.onupgradeneeded = e => e.target.result.createObjectStore("messages", { keyPath: "id", autoIncrement: true });
+            req.onsuccess = e => { db = e.target.result; loadStoredMessages(); };
+        }
 
         function startSystem() {
             const fName = document.getElementById('fname').value;
@@ -199,111 +146,52 @@
                 avatar: document.getElementById('avatar-url').value || 'https://via.placeholder.com/45'
             };
             localStorage.setItem('node_id', JSON.stringify(nodeData));
-            location.reload();
+            document.getElementById('profile-setup').style.display = 'none';
+            socket.emit('register_node', nodeData);
         }
 
         function pushMsg() {
             const inp = document.getElementById('main-input');
             const userData = JSON.parse(localStorage.getItem('node_id'));
             if(!inp.value || !userData) return;
-
-            const payload = { type: 'text', sender: userData.name, text: inp.value, time: new Date().toLocaleTimeString() };
-            socket.emit('send_message', payload);
+            socket.emit('send_message', { type: 'text', sender: userData.name, text: inp.value, time: new Date().toLocaleTimeString() });
             inp.value = '';
         }
 
-        function sendFile() {
-            const file = document.getElementById('file-input').files[0];
-            const userData = JSON.parse(localStorage.getItem('node_id'));
-            if (!file || !userData) return;
-
-            const reader = new FileReader();
-            reader.onload = e => {
-                const payload = {
-                    type: 'file',
-                    sender: userData.name,
-                    fileName: file.name,
-                    fileType: file.type,
-                    content: e.target.result,
-                    time: new Date().toLocaleTimeString()
-                };
-                socket.emit('send_message', payload);
-            };
-            reader.readAsDataURL(file);
-        }
-
         socket.on('receive_message', (data) => {
-            storeMessage(data);
+            if(db) {
+                const tx = db.transaction("messages", "readwrite");
+                tx.objectStore("messages").add(data);
+            }
             renderMessage(data);
         });
 
         socket.on('update_user_list', (users) => {
-            allNodes = users;
-            renderUsers(users);
-        });
-
-        function filterUsers() {
-            const s = document.getElementById('global-search').value.toLowerCase();
-            const filtered = allNodes.filter(n => n.name.toLowerCase().includes(s) || n.loc.toLowerCase().includes(s));
-            renderUsers(filtered);
-        }
-
-        function renderUsers(users) {
             const container = document.getElementById('users-container');
-            container.innerHTML = '';
-            users.forEach(u => {
-                container.innerHTML += `
-                    <div class="user">
-                        <img src="${u.avatar}" alt="">
-                        <div class="user-meta"><h4>${u.name}</h4><p>${u.loc} • <span style="color:#00ff00">Online</span></p></div>
-                    </div>`;
-            });
-        }
-
-        function storeMessage(data) {
-            const tx = db.transaction("messages", "readwrite");
-            tx.objectStore("messages").add(data);
-        }
-
-        function loadStoredMessages() {
-            const tx = db.transaction("messages", "readonly");
-            tx.objectStore("messages").getAll().onsuccess = e => {
-                e.target.result.forEach(m => renderMessage(m));
-            };
-        }
+            container.innerHTML = users.map(u => `
+                <div class="user">
+                    <img src="${u.avatar}">
+                    <div class="user-meta"><h4>${u.name}</h4><p>${u.loc} • <span style="color:#00ff00">Online</span></p></div>
+                </div>`).join('');
+        });
 
         function renderMessage(data) {
             const chatFlow = document.getElementById('chat-flow');
             const b = document.createElement('div');
-            const myName = JSON.parse(localStorage.getItem('node_id')).name;
+            const myName = JSON.parse(localStorage.getItem('node_id'))?.name;
             b.className = (data.sender === myName) ? 'bubble me' : 'bubble them';
-
-            if (data.type === 'file') {
-                if (data.fileType.startsWith('image/')) b.innerHTML = `<strong>${data.sender}</strong><img src="${data.content}" style="max-width:100%; border-radius:10px;">`;
-                else if (data.fileType.startsWith('video/')) b.innerHTML = `<strong>${data.sender}</strong><video controls style="max-width:100%; border-radius:10px;"><source src="${data.content}"></video>`;
-                else if (data.fileType.startsWith('audio/')) b.innerHTML = `<strong>${data.sender}</strong><audio controls style="width:100%;"><source src="${data.content}"></audio>`;
-                else b.innerHTML = `<strong>${data.sender}</strong><br><i class="fas fa-file"></i> <a href="${data.content}" download="${data.fileName}" style="color:var(--accent); font-size:0.8rem;">${data.fileName}</a>`;
-            } else {
-                b.innerHTML = `<strong>${data.sender}</strong> ${data.text}`;
-            }
-
+            b.innerHTML = `<strong>${data.sender}</strong><br>${data.text || 'File shared'}`;
             chatFlow.appendChild(b);
             chatFlow.scrollTop = chatFlow.scrollHeight;
         }
 
-        function revealMe() {
-            navigator.geolocation.getCurrentPosition(p => {
-                alert(`Node Active: ${p.coords.latitude}, ${p.coords.longitude}`);
-            });
+        function loadStoredMessages() {
+            const tx = db.transaction("messages", "readonly");
+            tx.objectStore("messages").getAll().onsuccess = e => e.target.result.forEach(m => renderMessage(m));
         }
 
         function wipeData() {
-            if(confirm("Wipe all local data and nodes?")) {
-                localStorage.clear();
-                const tx = db.transaction("messages", "readwrite");
-                tx.objectStore("messages").clear();
-                location.reload();
-            }
+            if(confirm("Terminate Session?")) { localStorage.clear(); location.reload(); }
         }
 
         document.getElementById('main-input').addEventListener('keypress', e => { if (e.key === 'Enter') pushMsg(); });
