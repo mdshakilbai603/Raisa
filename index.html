@@ -8,6 +8,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Playfair+Display:ital,wght@1,700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
+    <script src="/socket.io/socket.io.js"></script>
+    
     <style>
         :root {
             --bg: #080808;
@@ -21,7 +23,7 @@
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
         body { background: var(--bg); color: var(--text); overflow-x: hidden; }
 
-        /* --- লাইটওয়েট এন্ট্রান্স --- */
+        /* --- লাইটওয়েট এন্ট্রাস --- */
         #gate {
             position: fixed; inset: 0; background: #000; z-index: 9999;
             display: flex; justify-content: center; align-items: center;
@@ -29,16 +31,13 @@
         }
         .gate-label { font-family: 'Playfair Display'; font-size: 2rem; letter-spacing: 15px; color: var(--accent); animation: pulse 2s infinite; }
 
-        /* --- মেইন কন্টেইনার (Flex-based for all devices) --- */
         .wrapper { display: flex; height: 100vh; width: 100vw; opacity: 0; transition: 1.5s; }
         .active .wrapper { opacity: 1; }
 
-        /* সাইড নেভিগেশন */
         nav { width: 70px; background: #000; border-right: 1px solid var(--border); display: flex; flex-direction: column; align-items: center; padding: 25px 0; }
         nav i { font-size: 1.2rem; color: var(--dim); margin-bottom: 35px; cursor: pointer; transition: 0.3s; }
         nav i:hover, nav i.active { color: var(--accent); }
 
-        /* প্রোফাইল ও চ্যাট লিস্ট প্যানেল */
         .panel { width: 320px; background: #0a0a0a; border-right: 1px solid var(--border); display: flex; flex-direction: column; }
         .panel-header { padding: 25px; border-bottom: 1px solid var(--border); }
         .panel-header h2 { font-family: 'Playfair Display'; font-size: 1.2rem; color: var(--accent); letter-spacing: 2px; }
@@ -53,22 +52,21 @@
         .user-meta h4 { font-size: 0.85rem; font-weight: 600; }
         .user-meta p { font-size: 0.7rem; color: var(--dim); }
 
-        /* চ্যাট এরিয়া */
         main { flex: 1; display: flex; flex-direction: column; background: #080808; position: relative; }
         .chat-top { padding: 20px 30px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
         
         .chat-view { flex: 1; padding: 30px; overflow-y: auto; display: flex; flex-direction: column; gap: 20px; }
-        .bubble { max-width: 70%; padding: 15px 20px; font-size: 0.9rem; line-height: 1.5; border-radius: 18px; position: relative; }
+        .bubble { max-width: 70%; padding: 15px 20px; font-size: 0.9rem; line-height: 1.5; border-radius: 18px; position: relative; word-wrap: break-word; }
+        .bubble strong { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; color: var(--dim); display: block; margin-bottom: 5px; }
         .bubble.me { align-self: flex-end; background: var(--accent); color: #000; border-bottom-right-radius: 2px; font-weight: 500; }
+        .bubble.me strong { color: rgba(0,0,0,0.5); }
         .bubble.them { align-self: flex-start; background: var(--card); border: 1px solid var(--border); border-bottom-left-radius: 2px; }
 
-        /* ইনপুট টুলবার */
         .input-box { padding: 25px 30px; border-top: 1px solid var(--border); display: flex; align-items: center; gap: 15px; }
         .input-box input { flex: 1; background: transparent; border: none; color: #fff; font-size: 0.95rem; }
         .input-box i { color: var(--dim); cursor: pointer; font-size: 1.1rem; }
         .input-box i:hover { color: var(--accent); }
 
-        /* --- গ্লোবাল প্রোফাইল ক্রিয়েশন (পপআপ) --- */
         #profile-setup {
             position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 10000;
             display: none; justify-content: center; align-items: center; padding: 20px;
@@ -79,9 +77,8 @@
         .input-group label { display: block; font-size: 0.65rem; color: var(--accent); letter-spacing: 2px; margin-bottom: 8px; }
         .input-group input, .input-group select, .input-group textarea { width: 100%; background: #000; border: 1px solid var(--border); padding: 12px; color: #fff; }
         
-        /* রেসপনসিভনেস (Responsive) */
         @media (max-width: 768px) {
-            .panel { display: none; } /* মোবাইলে শুধু চ্যাট দেখাবে */
+            .panel { display: none; }
             nav { width: 60px; }
             .bubble { max-width: 85%; }
         }
@@ -152,7 +149,6 @@
 
             <div class="chat-view" id="chat-flow">
                 <div class="bubble them">System online. Global synchronization complete.</div>
-                <div class="bubble me">Node identity verified. Ready for transmission.</div>
             </div>
 
             <div class="input-box">
@@ -165,7 +161,8 @@
     </div>
 
     <script>
-        // ১ সেকেন্ডের ফাস্ট ইন্ট্রো
+        const socket = io(); // সার্ভারের সাথে কানেক্ট হচ্ছে
+
         window.onload = () => {
             setTimeout(() => {
                 document.getElementById('gate').style.opacity = '0';
@@ -180,30 +177,63 @@
         };
 
         function startSystem() {
+            const fName = document.getElementById('fname').value;
+            const lName = document.getElementById('lname').value;
+            if(!fName) return alert("Identity Required.");
+
             const nodeData = {
-                name: document.getElementById('fname').value + ' ' + document.getElementById('lname').value,
+                name: fName + ' ' + lName,
                 loc: document.getElementById('location').value,
-                rel: document.getElementById('rel-status').value
+                rel: document.getElementById('rel-status').value,
+                avatar: document.getElementById('avatar-url').value || 'https://via.placeholder.com/45'
             };
-            if(!document.getElementById('fname').value) return alert("Identity Required.");
+            
             localStorage.setItem('node_id', JSON.stringify(nodeData));
             location.reload();
         }
 
+        // মেসেজ পাঠানোর ফাংশন (Socket.io Integrated)
         function pushMsg() {
             const inp = document.getElementById('main-input');
-            if(!inp.value) return;
-            const b = document.createElement('div');
-            b.className = 'bubble me';
-            b.innerText = inp.value;
-            document.getElementById('chat-flow').appendChild(b);
+            const userData = JSON.parse(localStorage.getItem('node_id'));
+
+            if(!inp.value || !userData) return;
+
+            const messagePayload = {
+                sender: userData.name,
+                text: inp.value,
+                time: new Date().toLocaleTimeString(),
+                location: userData.loc
+            };
+
+            // সার্ভারে মেসেজ পাঠানো
+            socket.emit('send_message', messagePayload);
             inp.value = '';
-            document.getElementById('chat-flow').scrollTop = document.getElementById('chat-flow').scrollHeight;
         }
 
+        // সার্ভার থেকে আসা মেসেজ রিসিভ করা
+        socket.on('receive_message', (data) => {
+            const chatFlow = document.getElementById('chat-flow');
+            const b = document.createElement('div');
+            
+            const localData = localStorage.getItem('node_id');
+            const myName = localData ? JSON.parse(localData).name : "";
+            
+            b.className = (data.sender === myName) ? 'bubble me' : 'bubble them';
+            b.innerHTML = `<strong>${data.sender}</strong> ${data.text}`;
+            
+            chatFlow.appendChild(b);
+            chatFlow.scrollTop = chatFlow.scrollHeight;
+        });
+
+        // রিয়েল-টাইম লোকেশন ট্র্যাকিং (Security Feature)
         function revealMe() {
             navigator.geolocation.getCurrentPosition(p => {
-                alert(`Real-time Tracker: ${p.coords.latitude}, ${p.coords.longitude}\nProtocol: ANTI-BLACKMAIL ACTIVE`);
+                const loc = { lat: p.coords.latitude, lon: p.coords.longitude };
+                socket.emit('share_location', loc);
+                alert("আপনার লোকেশন নোড নেটওয়ার্কে আপডেট করা হয়েছে।");
+            }, (err) => {
+                alert("Location access denied.");
             });
         }
 
@@ -213,6 +243,11 @@
                 location.reload();
             }
         }
+
+        // Enter চাপলে মেসেজ পাঠানোর সুবিধা
+        document.getElementById('main-input').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') pushMsg();
+        });
     </script>
 </body>
 </html>
