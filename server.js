@@ -10,16 +10,16 @@ const io = new Server(server, {
     cors: { origin: "*" } 
 });
 
+// সঠিক পাথ সেট করা হলো
 app.use(express.static(path.join(__dirname, 'public')));
 
-// ডাটা স্টোর (মেমোরিতে সাময়িকভাবে সেভ থাকবে)
 let activeNodes = {}; 
 let chatHistory = [];
 
 io.on('connection', (socket) => {
     console.log('A Global Node Connected: ' + socket.id);
 
-    // ১. ইউজার রেজিস্ট্রেশন ও ডিসকভারি
+    // ইউজার রেজিস্ট্রেশন
     socket.on('register_node', (userData) => {
         activeNodes[socket.id] = {
             id: socket.id,
@@ -28,28 +28,21 @@ io.on('connection', (socket) => {
             avatar: userData.avatar
         };
         
-        // নতুন ইউজারকে পুরনো মেসেজ পাঠানো (Persistence)
+        // পুরনো মেসেজ লোড করা
         socket.emit('load_history', chatHistory);
         
-        // সবাইকে আপডেট ইউজার লিস্ট পাঠানো
+        // সবাইকে আপডেট লিস্ট পাঠানো
         io.emit('update_user_list', Object.values(activeNodes));
     });
 
-    // ২. মেসেজ ও ফাইল আদান-প্রদান
+    // মেসেজ আদান-প্রদান
     socket.on('send_message', (data) => {
-        // মেসেজ হিস্টোরিতে সেভ করা
         chatHistory.push(data);
-        if (chatHistory.length > 100) chatHistory.shift(); // শেষ ১০০ মেসেজ রাখা
-
+        if (chatHistory.length > 100) chatHistory.shift(); 
         io.emit('receive_message', data); 
     });
 
-    // ৩. লোকেশন শেয়ারিং
-    socket.on('share_location', (locData) => {
-        socket.broadcast.emit('track_node', locData);
-    });
-
-    // ৪. ডিসকানেক্ট হ্যান্ডলিং
+    // ডিসকানেক্ট হ্যান্ডলিং
     socket.on('disconnect', () => {
         if (activeNodes[socket.id]) {
             delete activeNodes[socket.id];
