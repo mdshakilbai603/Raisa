@@ -1,1 +1,1002 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>ABSTRACT | Core Control Center</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    
+    <style>
+        :root {
+            --pitch-black: #000000;
+            --pure-white: #ffffff;
+            --text-dim: #101010;
+            --text-muted: #444444;
+            --accent-color: #ffcc00;
+            --border-deep: #0a0a0a;
+            --glow-color: rgba(255, 204, 0, 0.04);
+            --card-bg: #020202;
+            --active-node-bg: #ffd700;
+            --active-node-text: #000000;
+            --error-color: #ff3b30;
+        }
 
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--pitch-black);
+            color: var(--pure-white);
+            font-family: 'Inter', sans-serif;
+            height: 100vh;
+            width: 100vw;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: fixed;
+        }
+
+        /* সিনেম্যাটিক ইন্ট্রো স্ক্রিন - প্রিমিয়াম অ্যানিমেশন */
+        #intro-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--pitch-black);
+            z-index: 10000;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .intro-text-wrapper {
+            text-align: center;
+            perspective: 1000px;
+        }
+
+        .intro-title {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(3rem, 7vw, 7.5rem);
+            font-weight: 700;
+            letter-spacing: 16px;
+            color: var(--pure-white);
+            opacity: 0;
+            transform: translateY(60px) rotateX(-30deg);
+            text-shadow: 0 0 45px rgba(255, 255, 255, 0.15);
+        }
+
+        .intro-subtitle {
+            font-size: 0.75rem;
+            letter-spacing: 10px;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-top: 4rem;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        /* অথেন্টিকেশন স্ক্রিন */
+        #auth-screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--pitch-black);
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .auth-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-deep);
+            border-radius: 22px;
+            width: 100%;
+            max-width: 420px;
+            padding: 3.8rem 3rem;
+            display: flex;
+            flex-direction: column;
+            gap: 2.6rem;
+            box-shadow: 0 0 110px rgba(0, 0, 0, 0.95), inset 0 0 35px var(--glow-color);
+        }
+
+        .auth-header {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .auth-title {
+            font-family: 'Cinzel', serif;
+            font-size: 1.8rem;
+            letter-spacing: 4px;
+            color: var(--pure-white);
+        }
+
+        .auth-subtitle {
+            font-size: 0.75rem;
+            letter-spacing: 1.5px;
+            color: var(--text-muted);
+        }
+
+        .auth-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.8rem;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .input-label {
+            font-size: 0.65rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--text-muted);
+        }
+
+        .auth-input {
+            background-color: var(--pitch-black);
+            border: 1px solid var(--border-deep);
+            border-radius: 14px;
+            padding: 15px 20px;
+            color: var(--pure-white);
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+            outline: none;
+            transition: all 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
+            width: 100%;
+        }
+
+        .auth-input:focus {
+            border-color: var(--accent-color);
+            box-shadow: 0 0 25px var(--glow-color);
+        }
+
+        .auth-button {
+            background-color: var(--accent-color);
+            color: var(--active-node-text);
+            border: none;
+            border-radius: 14px;
+            padding: 16px;
+            font-weight: 600;
+            font-size: 0.82rem;
+            letter-spacing: 3px;
+            cursor: pointer;
+            transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+            text-transform: uppercase;
+        }
+
+        .auth-button:hover {
+            opacity: 0.95;
+            box-shadow: 0 0 40px rgba(255, 204, 0, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .auth-switch {
+            text-align: center;
+            font-size: 0.75rem;
+            letter-spacing: 1.5px;
+            color: var(--text-muted);
+        }
+
+        .auth-switch span {
+            color: var(--accent-color);
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .error-message {
+            color: var(--error-color);
+            font-size: 0.72rem;
+            letter-spacing: 0.8px;
+            display: none;
+        }
+
+        /* মূল ওয়ার্কস্পেস */
+        .workspace {
+            width: 98vw;
+            height: 96vh;
+            max-width: 1440px;
+            max-height: 860px;
+            background-color: var(--pitch-black);
+            border: 1px solid var(--border-deep);
+            border-radius: 24px;
+            display: flex;
+            flex-direction: row;
+            overflow: hidden;
+            box-shadow: 0 0 140px rgba(0, 0, 0, 0.99), inset 0 0 55px var(--glow-color);
+            opacity: 0;
+            transform: scale(0.95);
+            position: relative;
+            z-index: 1;
+            visibility: hidden;
+        }
+
+        /* সাইডবার */
+        .sidebar {
+            width: 92px;
+            background-color: var(--pitch-black);
+            border-right: 1px solid var(--border-deep);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 4rem 0;
+            gap: 4.2rem;
+            z-index: 10;
+        }
+
+        .logo-vertical {
+            font-family: 'Cinzel', serif;
+            font-size: 0.78rem;
+            letter-spacing: 5px;
+            writing-mode: vertical-rl;
+            transform: rotate(180deg);
+            color: var(--accent-color);
+            cursor: pointer;
+            transition: all 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
+
+        .logo-vertical:hover {
+            color: var(--pure-white);
+        }
+
+        .nav-icon {
+            width: 52px;
+            height: 52px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+            cursor: pointer;
+            border: 1px solid transparent;
+            transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+        }
+
+        .nav-icon:hover, .nav-icon.active {
+            color: var(--accent-color);
+            border-color: rgba(255, 204, 0, 0.3);
+            box-shadow: 0 0 30px rgba(255, 204, 0, 0.22);
+            transform: scale(1.1) translateY(-3px);
+        }
+
+        /* মূল কন্টেন্ট প্যানেল */
+        .content-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background-color: var(--pitch-black);
+            height: 100%;
+        }
+
+        /* হেডার */
+        .header {
+            height: 96px;
+            border-bottom: 1px solid var(--border-deep);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 5rem;
+        }
+
+        .header-title {
+            font-family: 'Cinzel', serif;
+            font-size: 1.35rem;
+            letter-spacing: 5px;
+            color: var(--pure-white);
+        }
+
+        .header-status-badge {
+            font-size: 0.68rem;
+            letter-spacing: 2.6px;
+            color: var(--accent-color);
+            border: 1px solid rgba(255, 204, 0, 0.28);
+            padding: 8px 20px;
+            border-radius: 12px;
+            background-color: var(--pitch-black);
+        }
+
+        /* মেইন বডি এরিয়া */
+        .main-body {
+            flex: 1;
+            padding: 4rem 5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 3.2rem;
+            overflow-y: auto;
+        }
+
+        .body-top-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 2.4rem;
+        }
+
+        .title-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 2.2rem;
+        }
+
+        .net-core-title {
+            font-family: 'Cinzel', serif;
+            font-size: 2.6rem;
+            letter-spacing: 4px;
+            color: var(--pure-white);
+        }
+
+        .badge-active {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.68rem;
+            font-weight: 700;
+            letter-spacing: 3.5px;
+            background-color: var(--active-node-bg);
+            color: var(--active-node-text);
+            padding: 7px 18px;
+            border-radius: 20px;
+            box-shadow: 0 0 25px rgba(255, 215, 0, 0.28);
+        }
+
+        .search-container {
+            position: relative;
+            width: 100%;
+            max-width: 440px;
+        }
+
+        .search-input {
+            width: 100%;
+            background-color: var(--pitch-black);
+            border: 1px solid var(--border-deep);
+            border-radius: 16px;
+            padding: 15px 22px 15px 58px;
+            color: var(--pure-white);
+            font-size: 0.88rem;
+            letter-spacing: 1.5px;
+            outline: none;
+            transition: all 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
+
+        .search-input:focus {
+            border-color: var(--accent-color);
+            box-shadow: 0 0 30px var(--glow-color);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            width: 20px;
+            height: 20px;
+        }
+
+        /* নোড যুক্ত করার ফর্ম */
+        .node-add-container {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-deep);
+            border-radius: 18px;
+            padding: 2.2rem 2.8rem;
+            display: flex;
+            gap: 1.8rem;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-bottom: 1.8rem;
+        }
+
+        .add-input {
+            background-color: var(--pitch-black);
+            border: 1px solid var(--border-deep);
+            border-radius: 12px;
+            padding: 12px 16px;
+            color: var(--pure-white);
+            font-size: 0.82rem;
+            outline: none;
+            flex: 1;
+            min-width: 220px;
+            transition: all 0.3s ease;
+        }
+
+        .add-input:focus {
+            border-color: var(--accent-color);
+        }
+
+        .add-btn {
+            background-color: var(--accent-color);
+            color: var(--active-node-text);
+            border: none;
+            border-radius: 12px;
+            padding: 12px 24px;
+            font-weight: 600;
+            font-size: 0.78rem;
+            letter-spacing: 2px;
+            cursor: pointer;
+            text-transform: uppercase;
+            transition: all 0.4s ease;
+        }
+
+        .add-btn:hover {
+            opacity: 0.92;
+            transform: translateY(-1px);
+        }
+
+        /* নোড কার্ডসমূহ */
+        .nodes-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 1.8rem;
+        }
+
+        .empty-state {
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            letter-spacing: 1.5px;
+            padding: 4rem 0;
+            border: 1px dashed var(--border-deep);
+            border-radius: 16px;
+        }
+
+        .node-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-deep);
+            border-radius: 18px;
+            padding: 2.1rem 2.8rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: all 0.45s cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
+
+        .node-card:hover {
+            border-color: rgba(255, 204, 0, 0.2);
+            box-shadow: 0 0 55px rgba(255, 204, 0, 0.08);
+            transform: translateY(-1px);
+        }
+
+        .node-details {
+            display: flex;
+            align-items: center;
+            gap: 2.4rem;
+        }
+
+        .avatar {
+            width: 72px;
+            height: 72px;
+            background-color: var(--pitch-black);
+            border: 1px solid var(--border-deep);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Cinzel', serif;
+            font-size: 0.95rem;
+            color: var(--accent-color);
+            position: relative;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .status-dot {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            background-color: #00ff66;
+            border-radius: 50%;
+            bottom: 2px;
+            right: 2px;
+            box-shadow: 0 0 10px #00ff66;
+        }
+
+        .node-info-text {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .node-name {
+            font-size: 1.35rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+
+        .node-location {
+            font-size: 0.78rem;
+            letter-spacing: 1.5px;
+            color: var(--text-muted);
+        }
+
+        .node-type-badge {
+            font-size: 0.78rem;
+            letter-spacing: 1.8px;
+            color: var(--text-muted);
+        }
+
+        .delete-btn {
+            background: transparent;
+            color: var(--error-color);
+            border: 1px solid var(--border-deep);
+            padding: 6px 14px;
+            border-radius: 8px;
+            font-size: 0.68rem;
+            cursor: pointer;
+            letter-spacing: 1.2px;
+            transition: all 0.3s ease;
+            margin-right: 12px;
+        }
+
+        .delete-btn:hover {
+            border-color: var(--error-color);
+            box-shadow: 0 0 12px rgba(255, 59, 48, 0.2);
+        }
+
+        .logout-btn {
+            background: transparent;
+            color: var(--accent-color);
+            border: 1px solid var(--border-deep);
+            padding: 8px 20px;
+            border-radius: 12px;
+            font-size: 0.78rem;
+            letter-spacing: 1.8px;
+            cursor: pointer;
+            transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+        }
+
+        .logout-btn:hover {
+            border-color: #ff3333;
+            color: #ff3333;
+            box-shadow: 0 0 25px rgba(255, 51, 51, 0.18);
+        }
+
+        /* রেসপন্সিভ ডিজাইন */
+        @media screen and (max-width: 768px) {
+            .workspace {
+                width: 100vw;
+                height: 100vh;
+                border-radius: 0;
+                border: none;
+            }
+
+            .sidebar {
+                width: 64px;
+                padding: 1.6rem 0;
+                gap: 2.2rem;
+            }
+
+            .logo-vertical {
+                font-size: 0.58rem;
+            }
+
+            .nav-icon {
+                width: 40px;
+                height: 40px;
+            }
+
+            .header {
+                height: 80px;
+                padding: 0 1.8rem;
+            }
+
+            .header-title {
+                font-size: 0.98rem;
+            }
+
+            .main-body {
+                padding: 1.8rem;
+                gap: 2.4rem;
+            }
+
+            .net-core-title {
+                font-size: 1.8rem;
+            }
+
+            .body-top-section {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 1.8rem;
+            }
+
+            .node-add-container {
+                gap: 1.2rem;
+            }
+
+            .node-card {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1.8rem;
+                padding: 1.6rem;
+            }
+
+            .node-details {
+                width: 100%;
+                justify-content: space-between;
+            }
+
+            .node-type-badge {
+                align-self: flex-end;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="intro-screen">
+        <div class="intro-text-wrapper">
+            <div class="intro-title" id="titleText">ABSTRACT</div>
+            <div class="intro-subtitle" id="subtitleText">INITIALIZING GLOBAL CORE CONTROL V3</div>
+        </div>
+    </div>
+
+    <div id="auth-screen">
+        <div class="auth-card">
+            <div class="auth-header">
+                <div class="auth-title" id="formTitle">SIGN IN</div>
+                <div class="auth-subtitle">ENTER THE SECURE ENVIRONMENT</div>
+            </div>
+
+            <form class="auth-form" id="authForm" onsubmit="handleAuthentication(event)">
+                <div class="input-group">
+                    <span class="input-label">Username</span>
+                    <input type="text" class="auth-input" id="username" placeholder="USERNAME" required>
+                </div>
+                
+                <div class="input-group" id="emailGroup" style="display: none;">
+                    <span class="input-label">Email Address</span>
+                    <input type="email" class="auth-input" id="email" placeholder="core@example.com">
+                </div>
+
+                <div class="input-group">
+                    <span class="input-label">Security Key / Password</span>
+                    <input type="password" class="auth-input" id="password" placeholder="••••••••" required>
+                </div>
+
+                <span class="error-message" id="errorMessage">Invalid credentials. Access denied.</span>
+
+                <button type="submit" class="auth-button" id="submitBtn">Authenticate</button>
+            </form>
+
+            <div class="auth-switch">
+                <span id="switchText">New here? <span onclick="toggleMode()">Create an account</span></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="workspace" id="mainWorkspace">
+        
+        <aside class="sidebar">
+            <div class="logo-vertical">ABSTRACT</div>
+            
+            <div class="nav-icon active">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <line x1="2" y1="12" x2="22" y2="12"/>
+                </svg>
+            </div>
+
+            <div class="nav-icon">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polygon points="12 2 2 7 12 12 22 7 12 2"/>
+                    <polyline points="2 17 12 22 22 17"/>
+                    <polyline points="2 12 12 17 22 12"/>
+                </svg>
+            </div>
+
+            <div class="nav-icon">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="3"/>
+                    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+                </svg>
+            </div>
+        </aside>
+
+        <div class="content-container">
+            <header class="header">
+                <div class="header-title">ABSTRACT CORE</div>
+                <div style="display: flex; gap: 1.8rem; align-items: center;">
+                    <div class="header-status-badge">SYSTEM STABLE</div>
+                    <button class="logout-btn" onclick="handleLogout()">LOGOUT</button>
+                </div>
+            </header>
+
+            <main class="main-body">
+                
+                <div class="body-top-section">
+                    <div class="title-wrapper">
+                        <h1 class="net-core-title">NET_CORE</h1>
+                        <span class="badge-active">ACTIVE</span>
+                    </div>
+
+                    <div class="search-container">
+                        <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="11" cy="11" r="8"/>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                        </svg>
+                        <input type="text" class="search-input" placeholder="Search Active Node..." oninput="filterNodes(this.value)">
+                    </div>
+                </div>
+
+                <div class="node-add-container">
+                    <input type="text" class="add-input" id="nodeName" placeholder="Node Name (e.g., Jane Doe)" required>
+                    <input type="text" class="add-input" id="nodeLocation" placeholder="Location (e.g., Tokyo, JP)" required>
+                    <input type="text" class="add-input" id="nodeType" placeholder="Node Type (e.g., System Node)" required>
+                    <input type="file" class="add-input" id="nodeImage" accept="image/*" title="Profile Image">
+                    <button class="add-btn" onclick="addNewNode()">Add Node</button>
+                </div>
+
+                <div class="nodes-grid" id="nodesContainer">
+                    </div>
+
+            </main>
+        </div>
+    </div>
+
+    <script>
+        let isSignUp = false;
+        let nodes = []; // কোনো ফেক নোড রাখা হয়নি, সম্পূর্ণ খালি
+
+        document.addEventListener("DOMContentLoaded", () => {
+            const tl = gsap.timeline();
+
+            // সিনেম্যাটিক অ্যানিমেশন
+            tl.to("#titleText", {
+                opacity: 1,
+                y: 0,
+                duration: 1.6,
+                ease: "power4.out"
+            })
+            .to("#subtitleText", {
+                opacity: 1,
+                y: 0,
+                duration: 0.8,
+                ease: "power2.out"
+            }, "-=0.6")
+            .to("#intro-screen", {
+                opacity: 0,
+                duration: 1.2,
+                ease: "power3.inOut",
+                delay: 1.4
+            })
+            .set("#intro-screen", { display: "none" })
+            .to("#auth-screen", {
+                opacity: 1,
+                duration: 0.8,
+                ease: "power2.out"
+            })
+            .set("#auth-screen", { pointerEvents: "all" });
+
+            renderNodes();
+        });
+
+        function renderNodes() {
+            const container = document.getElementById('nodesContainer');
+            container.innerHTML = '';
+            
+            if (nodes.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">No active nodes found. Add your first node above to establish presence.</div>
+                `;
+                return;
+            }
+            
+            nodes.forEach((node, index) => {
+                const card = document.createElement('div');
+                card.className = 'node-card';
+                
+                let imageStyle = '';
+                if (node.image) {
+                    imageStyle = `background-image: url('${node.image}')`;
+                }
+
+                card.innerHTML = `
+                    <div class="node-details">
+                        <div class="avatar" style="${imageStyle}">
+                            ${node.image ? '' : node.initials}
+                            <span class="status-dot"></span>
+                        </div>
+                        <div class="node-info-text">
+                            <span class="node-name">${node.name}</span>
+                            <span class="node-location">${node.location}</span>
+                        </div>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 16px;">
+                        <span class="node-type-badge">${node.type}</span>
+                        <button class="delete-btn" onclick="deleteNode(${index})">REMOVE</button>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function filterNodes(query) {
+            const container = document.getElementById('nodesContainer');
+            container.innerHTML = '';
+
+            const filtered = nodes.filter(n => 
+                n.name.toLowerCase().includes(query.toLowerCase()) || 
+                n.location.toLowerCase().includes(query.toLowerCase())
+            );
+
+            if (filtered.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">No matching nodes found.</div>
+                `;
+                return;
+            }
+
+            filtered.forEach((node, index) => {
+                const card = document.createElement('div');
+                card.className = 'node-card';
+                
+                let imageStyle = '';
+                if (node.image) {
+                    imageStyle = `background-image: url('${node.image}')`;
+                }
+
+                card.innerHTML = `
+                    <div class="node-details">
+                        <div class="avatar" style="${imageStyle}">
+                            ${node.image ? '' : node.initials}
+                            <span class="status-dot"></span>
+                        </div>
+                        <div class="node-info-text">
+                            <span class="node-name">${node.name}</span>
+                            <span class="node-location">${node.location}</span>
+                        </div>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 16px;">
+                        <span class="node-type-badge">${node.type}</span>
+                        <button class="delete-btn" onclick="deleteNode(${nodes.indexOf(node)})">REMOVE</button>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function addNewNode() {
+            const name = document.getElementById('nodeName').value;
+            const location = document.getElementById('nodeLocation').value;
+            const type = document.getElementById('nodeType').value;
+            const imageFile = document.getElementById('nodeImage').files[0];
+
+            if (!name || !location || !type) {
+                alert("Please fill all required fields before adding.");
+                return;
+            }
+
+            const initials = name.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
+
+            if (imageFile) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    nodes.push({
+                        id: Date.now(),
+                        name: name,
+                        location: location,
+                        type: type,
+                        initials: initials,
+                        image: e.target.result
+                    });
+                    renderNodes();
+                    clearInputs();
+                };
+                reader.readAsDataURL(imageFile);
+            } else {
+                nodes.push({
+                    id: Date.now(),
+                    name: name,
+                    location: location,
+                    type: type,
+                    initials: initials,
+                    image: null
+                });
+                renderNodes();
+                clearInputs();
+            }
+        }
+
+        function deleteNode(index) {
+            nodes.splice(index, 1);
+            renderNodes();
+        }
+
+        function clearInputs() {
+            document.getElementById('nodeName').value = '';
+            document.getElementById('nodeLocation').value = '';
+            document.getElementById('nodeType').value = '';
+            document.getElementById('nodeImage').value = '';
+        }
+
+        function toggleMode() {
+            isSignUp = !isSignUp;
+            const formTitle = document.getElementById('formTitle');
+            const submitBtn = document.getElementById('submitBtn');
+            const switchText = document.getElementById('switchText');
+            const emailGroup = document.getElementById('emailGroup');
+
+            if (isSignUp) {
+                formTitle.innerText = "SIGN UP";
+                submitBtn.innerText = "Register";
+                switchText.innerHTML = 'Already registered? <span onclick="toggleMode()">Sign In</span>';
+                emailGroup.style.display = 'flex';
+            } else {
+                formTitle.innerText = "SIGN IN";
+                submitBtn.innerText = "Authenticate";
+                switchText.innerHTML = 'New here? <span onclick="toggleMode()">Create an account</span>';
+                emailGroup.style.display = 'none';
+            }
+        }
+
+        function handleAuthentication(event) {
+            event.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            if (username && password) {
+                document.getElementById('errorMessage').style.display = 'none';
+
+                gsap.to("#auth-screen", {
+                    opacity: 0,
+                    duration: 0.6,
+                    ease: "power2.inOut"
+                }).then(() => {
+                    document.getElementById('auth-screen').style.display = 'none';
+                    const workspace = document.getElementById('mainWorkspace');
+                    workspace.style.visibility = "visible";
+                    
+                    gsap.to(workspace, {
+                        opacity: 1,
+                        scale: 1,
+                        duration: 1.2,
+                        ease: "power4.out"
+                    });
+                });
+            } else {
+                document.getElementById('errorMessage').style.display = 'block';
+            }
+        }
+
+        function handleLogout() {
+            const workspace = document.getElementById('mainWorkspace');
+            
+            gsap.to(workspace, {
+                opacity: 0,
+                scale: 0.95,
+                duration: 0.5,
+                ease: "power2.inOut"
+            }).then(() => {
+                workspace.style.visibility = "hidden";
+                const authScreen = document.getElementById('auth-screen');
+                authScreen.style.display = 'flex';
+                gsap.to(authScreen, {
+                    opacity: 1,
+                    duration: 0.7,
+                    ease: "power2.out"
+                });
+            });
+        }
+    </script>
+</body>
+</html>
